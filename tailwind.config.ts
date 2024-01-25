@@ -10,8 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          dark: 'rgba(var(--primary-rgba),1)',
-          light: 'rgba(var(--secondary-rgba),1)'
+          dark: 'rgba(var(--primary-rgba),<alpha-value>)',
+          light: 'rgba(var(--secondary-rgba),<alpha-value>)'
         }
       }
     },

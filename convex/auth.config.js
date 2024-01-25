@@ -1,7 +1,7 @@
 export default {
 	providers: [
 		{
-			domain: process.env.NEXT_PUBLIC_CONVEX_URL,
+			domain: 'https://primary-wren-98.clerk.accounts.dev',
 			applicationID: 'convex',
 		},
 	],
