@@ -1,13 +1,15 @@
 'use client';
-
-import React from 'react';
+import React, { useState } from 'react';
 import { UserButton, SignOutButton, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
+
 import { usePathname } from 'next/navigation';
 
 export default function SideNav(): React.ReactElement {
+	const [isOpen, setIsOpen] = useState(false);
+
 	const inActiveLink = ' flex items-center gap-3 px-4 py-3 tracking-widest';
-	const activeLink = `${inActiveLink} font-bold text-primary-light bg-blue-950 bg-opacity-20 rounded-l-md `;
+	const activeLink = `${inActiveLink} text-primary-light bg-blue-950 bg-opacity-20 rounded-l-md `;
 
 	const { user } = useUser();
 	const userEmail = user?.emailAddresses[0].emailAddress;
@@ -17,17 +19,42 @@ export default function SideNav(): React.ReactElement {
 
 	return (
 		<>
-			<div className='flex  items-center px-4 pt-6 gap-4  '>
-				<UserButton afterSignOutUrl='/' />
-				<h2 className='text-xl font-semibold '>{userFirstName}</h2>
-			</div>
-			<p className='text-xs px-4'>{userEmail}</p>
-			<nav className='mt-6'>
+			<header className='flex items-center justify-between bg-primary-dark/100 md:block'>
+				<button
+					onClick={() => setIsOpen((prev) => !prev)}
+					className='md:hidden'>
+					{isOpen ? <TopCloseIcon /> : <MenuIcon />}
+					<span className='sr-only'>Toggle navigation menu</span>
+				</button>
+				<Link href={'/userPage'} className='md:hidden'>
+					GymBuddy4U
+				</Link>
+				<div className='flex  items-center gap-4 md:pl-4  '>
+					<UserButton afterSignOutUrl='/' />
+					<h2 className='text-xl font-semibold '>{userFirstName}</h2>
+				</div>
+				<p className='text-xs py-4 hidden lg:block '>{userEmail}</p>
+			</header>
+			<nav
+				className={` -translate-x-full absolute  mt-6 transition-all duration-300 ease-out md:relative md:translate-x-0 md:block'
+		${
+			isOpen
+				? 'inset-x-4 top-10 bottom-4 pr-4 translate-x-0 block absolute bg-primary-dark bg-opacity-85'
+				: ' -translate-x-full hidden  md:translate-x-0 md:block '
+		}`}>
+				<Link
+					className=' flex items-center gap-4 px-4 py-3 tracking-widest'
+					onClick={() => setIsOpen(false)}
+					href={`/userPage`}>
+					<UserIcon />
+					<span>User Page</span>
+				</Link>
 				<Link
 					className={
 						pathname.includes('measurements') ? activeLink : inActiveLink
 					}
-					href='measurements'>
+					onClick={() => setIsOpen(false)}
+					href={`/userPage/measurements`}>
 					<Ruler />
 					<span>Measurements</span>
 				</Link>
@@ -35,31 +62,36 @@ export default function SideNav(): React.ReactElement {
 					className={
 						pathname.includes('workoutPlan') ? activeLink : inActiveLink
 					}
-					href='workoutPlan'>
+					onClick={() => setIsOpen(false)}
+					href={`/userPage/workoutPlan`}>
 					<ActivityIcon />
 					<span>Workout Plan</span>
 				</Link>
 				<Link
 					className={pathname.includes('nutrition') ? activeLink : inActiveLink}
-					href='nutrition'>
+					onClick={() => setIsOpen(false)}
+					href={'/userPage/nutrition'}>
 					<AppleIcon />
 					<span>Nutritional Guidance</span>
 				</Link>
 				<Link
 					className={pathname.includes('taskList') ? activeLink : inActiveLink}
-					href='taskList'>
+					onClick={() => setIsOpen(false)}
+					href={'/userPage/taskList'}>
 					<ListTodoIcon />
 					<span>Task List</span>
 				</Link>
 				<Link
 					className={pathname.includes('charts') ? activeLink : inActiveLink}
-					href='charts'>
+					onClick={() => setIsOpen(false)}
+					href={'/userPage/charts'}>
 					<BarChartIcon />
 					<span>Performance Stats</span>
 				</Link>
 				<Link
 					className={pathname.includes('photos') ? activeLink : inActiveLink}
-					href='photos'>
+					onClick={() => setIsOpen(false)}
+					href={'/userPage/photos'}>
 					<CameraIcon />
 					<span>Progress Photos</span>
 				</Link>
@@ -67,7 +99,8 @@ export default function SideNav(): React.ReactElement {
 					className={
 						pathname.includes('achievements') ? activeLink : inActiveLink
 					}
-					href='achievements'>
+					onClick={() => setIsOpen(false)}
+					href={'/userPage/achievements'}>
 					<AwardIcon />
 					<span>Achievements</span>
 				</Link>
@@ -77,6 +110,24 @@ export default function SideNav(): React.ReactElement {
 				</div>
 			</nav>
 		</>
+	);
+}
+function UserIcon(props: {}) {
+	return (
+		<svg
+			{...props}
+			xmlns='http://www.w3.org/2000/svg'
+			width='24'
+			height='24'
+			viewBox='0 0 24 24'
+			fill='none'
+			stroke='currentColor'
+			strokeWidth='2'
+			strokeLinecap='round'
+			strokeLinejoin='round'>
+			<path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' />
+			<circle cx='12' cy='7' r='4' />
+		</svg>
 	);
 }
 
@@ -167,9 +218,10 @@ function ActivityIcon() {
 	);
 }
 
-function AwardIcon() {
+function AwardIcon(props: {}) {
 	return (
 		<svg
+			{...props}
 			xmlns='http://www.w3.org/2000/svg'
 			width='24'
 			height='24'
@@ -179,8 +231,7 @@ function AwardIcon() {
 			strokeWidth='2'
 			strokeLinecap='round'
 			strokeLinejoin='round'>
-			<circle cx='12' cy='8' r='6' />
-			<path d='M15.477 12.89 17 22l-5-3-5 3 1.523-9.11' />
+			<polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' />
 		</svg>
 	);
 }
@@ -256,6 +307,42 @@ function LogOut() {
 				strokeLinecap='round'
 				strokeLinejoin='round'
 				d='M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75'
+			/>
+		</svg>
+	);
+}
+function MenuIcon() {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			width='24'
+			height='24'
+			viewBox='0 0 24 24'
+			fill='none'
+			stroke='currentColor'
+			strokeWidth='2'
+			strokeLinecap='round'
+			strokeLinejoin='round'>
+			<line x1='4' x2='20' y1='12' y2='12' />
+			<line x1='4' x2='20' y1='6' y2='6' />
+			<line x1='4' x2='20' y1='18' y2='18' />
+		</svg>
+	);
+}
+
+function TopCloseIcon() {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			fill='none'
+			viewBox='0 0 24 24'
+			strokeWidth='1.5'
+			stroke='currentColor'
+			className='w-6 h-6'>
+			<path
+				strokeLinecap='round'
+				strokeLinejoin='round'
+				d='M6 18 18 6M6 6l12 12'
 			/>
 		</svg>
 	);

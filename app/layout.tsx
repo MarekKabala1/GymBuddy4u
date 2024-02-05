@@ -1,8 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Providers } from './ConvexClientProvider';
-import { auth } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
+import { currentUser } from '@clerk/nextjs';
+import Link from 'next/link';
 
 // const inter = Inter({ subsets: ['latin'] });
 
@@ -17,16 +17,14 @@ export const metadata: Metadata = {
 	],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const { userId }: { userId: string | null } = auth();
-
 	return (
 		<html lang='en'>
-			<body className='m-auto min-h-screen bg-primary-dark text-primary-light'>
+			<body className='m-auto max-h-dvh bg-primary-dark text-primary-light'>
 				<Providers>{children}</Providers>
 			</body>
 		</html>

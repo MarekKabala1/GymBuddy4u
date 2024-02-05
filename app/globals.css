@@ -17,10 +17,10 @@
 }
 
 .btn-dark {
-	@apply border-2 border-solid rounded-lg py-2 px-4 text-sm font-bold text-primary-light bg-primary-dark;
+	@apply border-2 border-solid rounded-lg  px-2 py-2 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm;
 }
 .btn-light {
-	@apply border-2 border-solid rounded-lg py-2 px-4 text-sm font-bold text-primary-dark bg-primary-light;
+	@apply border-2 border-solid rounded-lg  px-2 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm;
 }
 .icon {
 	@apply w-8 h-8;
