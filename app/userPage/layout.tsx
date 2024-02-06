@@ -6,7 +6,7 @@ export default function UserPageLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<main className=' flex min-h-dvh p-4 flex-col gap-4 md:flex-row md:min-h-dvh'>
+		<main className=' flex min-h-dvh p-4 flex-col  md:flex-row md:min-h-dvh'>
 			<aside className=''>
 				<SideNav />
 			</aside>

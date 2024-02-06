@@ -5,17 +5,46 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 
+interface NavLinkProps {
+	href: string;
+	label: string;
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	closeSideNav: () => void;
+}
+
+const NavLink: React.FC<NavLinkProps> = ({
+	href,
+	label,
+	icon: Icon,
+	closeSideNav,
+}) => {
+	const pathname = usePathname();
+	const isActive = pathname === href;
+
+	const inActiveLink = 'flex items-center gap-3 px-4 py-3 tracking-widest';
+	const activeLink = `${inActiveLink} text-primary-light bg-blue-950 bg-opacity-20 rounded-l-md`;
+
+	return (
+		<Link
+			href={href}
+			className={isActive ? activeLink : inActiveLink}
+			onClick={closeSideNav}>
+			{Icon && <Icon />}
+			<span>{label}</span>
+		</Link>
+	);
+};
+
 export default function SideNav(): React.ReactElement {
 	const [isOpen, setIsOpen] = useState(false);
-
-	const inActiveLink = ' flex items-center gap-3 px-4 py-3 tracking-widest';
-	const activeLink = `${inActiveLink} text-primary-light bg-blue-950 bg-opacity-20 rounded-l-md `;
 
 	const { user } = useUser();
 	const userEmail = user?.emailAddresses[0].emailAddress;
 	const userFirstName = user?.firstName;
 
-	const pathname = usePathname();
+	const closeSideNav = () => {
+		setIsOpen(false);
+	};
 
 	return (
 		<>
@@ -42,68 +71,54 @@ export default function SideNav(): React.ReactElement {
 				? 'inset-x-4 top-10 bottom-4 pr-4 translate-x-0 block absolute bg-primary-dark bg-opacity-85'
 				: ' -translate-x-full hidden  md:translate-x-0 md:block '
 		}`}>
-				<Link
-					className=' flex items-center gap-4 px-4 py-3 tracking-widest'
-					onClick={() => setIsOpen(false)}
-					href={`/userPage`}>
-					<UserIcon />
-					<span>User Page</span>
-				</Link>
-				<Link
-					className={
-						pathname.includes('measurements') ? activeLink : inActiveLink
-					}
-					onClick={() => setIsOpen(false)}
-					href={`/userPage/measurements`}>
-					<Ruler />
-					<span>Measurements</span>
-				</Link>
-				<Link
-					className={
-						pathname.includes('workoutPlan') ? activeLink : inActiveLink
-					}
-					onClick={() => setIsOpen(false)}
-					href={`/userPage/workoutPlan`}>
-					<ActivityIcon />
-					<span>Workout Plan</span>
-				</Link>
-				<Link
-					className={pathname.includes('nutrition') ? activeLink : inActiveLink}
-					onClick={() => setIsOpen(false)}
-					href={'/userPage/nutrition'}>
-					<AppleIcon />
-					<span>Nutritional Guidance</span>
-				</Link>
-				<Link
-					className={pathname.includes('taskList') ? activeLink : inActiveLink}
-					onClick={() => setIsOpen(false)}
-					href={'/userPage/taskList'}>
-					<ListTodoIcon />
-					<span>Task List</span>
-				</Link>
-				<Link
-					className={pathname.includes('charts') ? activeLink : inActiveLink}
-					onClick={() => setIsOpen(false)}
-					href={'/userPage/charts'}>
-					<BarChartIcon />
-					<span>Performance Stats</span>
-				</Link>
-				<Link
-					className={pathname.includes('photos') ? activeLink : inActiveLink}
-					onClick={() => setIsOpen(false)}
-					href={'/userPage/photos'}>
-					<CameraIcon />
-					<span>Progress Photos</span>
-				</Link>
-				<Link
-					className={
-						pathname.includes('achievements') ? activeLink : inActiveLink
-					}
-					onClick={() => setIsOpen(false)}
-					href={'/userPage/achievements'}>
-					<AwardIcon />
-					<span>Achievements</span>
-				</Link>
+				<NavLink
+					href='/userPage'
+					label='User Page'
+					icon={UserIcon}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/measurements'
+					label='Measurements'
+					icon={Ruler}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/workoutPlan'
+					label='Workout Plan'
+					icon={ActivityIcon}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/nutrition'
+					label='Nutritional Guidance'
+					icon={AppleIcon}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/taskList'
+					label='Task List'
+					icon={ListTodoIcon}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/charts'
+					label='Performance Stats'
+					icon={BarChartIcon}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/photos'
+					label='Progress Photos'
+					icon={CameraIcon}
+					closeSideNav={closeSideNav}
+				/>
+				<NavLink
+					href='/userPage/achievements'
+					label='Achievements'
+					icon={AwardIcon}
+					closeSideNav={closeSideNav}
+				/>
 				<div className='flex items-center gap-3 px-4 pt-12 pointer-events-auto'>
 					<LogOut />
 					<SignOutButton>Log Out</SignOutButton>
