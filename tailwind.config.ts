@@ -13,6 +13,9 @@ const config: Config = {
           dark: 'rgba(var(--primary-rgba),<alpha-value>)',
           light: 'rgba(var(--secondary-rgba),<alpha-value>)'
         }
+      },
+      gridTemplateColumns: {
+        '1fr,2fr': '1fr 2fr'
       }
     },
   },

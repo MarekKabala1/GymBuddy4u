@@ -48,7 +48,7 @@ export default function SideNav(): React.ReactElement {
 
 	return (
 		<>
-			<header className='flex items-center justify-between bg-primary-dark/100 md:block'>
+			<header className='flex pb-4 items-center justify-between bg-primary-dark/100 md:block'>
 				<button
 					onClick={() => setIsOpen((prev) => !prev)}
 					className='md:hidden'>
@@ -60,7 +60,9 @@ export default function SideNav(): React.ReactElement {
 				</Link>
 				<div className='flex  items-center gap-4 md:pl-4  '>
 					<UserButton afterSignOutUrl='/' />
-					<h2 className='text-xl font-semibold '>{userFirstName}</h2>
+					<h2 className='text-xl font-semibold hidden md:block'>
+						{userFirstName}
+					</h2>
 				</div>
 				<p className='text-xs py-4 hidden lg:block '>{userEmail}</p>
 			</header>

@@ -27,7 +27,7 @@ export default function TopNav() {
 	} else {
 		return (
 			<header className='flex items-center justify-between p-4 px-2 bg-primary-dark/100 sm:px-8 '>
-				<Link href='#'>
+				<Link href='/userPage'>
 					<Image
 						src='/img-svg/svg/logoLight.svg'
 						alt='GymBuddy4U logo'
