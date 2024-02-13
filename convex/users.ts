@@ -3,9 +3,6 @@ import { internalMutation, MutationCtx, query, QueryCtx } from "./_generated/ser
 import { getUserId } from "./utils";
 
 
-
-
-
 export const createUser = internalMutation({
   args: { email: v.string(), userId: v.string(), name: v.optional(v.string()), timeStamp: v.number() },
   handler: async (ctx, args) => {

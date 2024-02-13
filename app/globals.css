@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+:root {
+	height: 100%;
+}
 :root {
 	--primary-rgba: 7, 14, 33;
 	--secondary-rgba: 225, 229, 230;
@@ -17,7 +22,7 @@
 }
 
 .btn-dark {
-	@apply border-2 border-solid rounded-lg  px-2 py-2 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm;
+	@apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm;
 }
 .btn-light {
 	@apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm;

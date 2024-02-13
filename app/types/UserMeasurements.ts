@@ -1,4 +1,6 @@
 export interface UserMeasurements {
+  _id?: Id<"usersMesurments">;
+  _creationTime?: number;
   userId: string;
   weight: number;
   height: number;
@@ -11,3 +13,4 @@ export interface UserMeasurements {
   belly: number;
   timeStamp: number;
 };
+type Id<T> = string;

@@ -39,10 +39,10 @@ export default function TopNav() {
 				</Link>
 				<div className='flex gap-4 sm:gap-8'>
 					<SignInButton afterSignInUrl='/userPage' mode='modal'>
-						<button className='btn-light'>Sign In</button>
+						<button className='btn-light'>Log In</button>
 					</SignInButton>
 					<SignUpButton afterSignInUrl='/userPage' mode='modal'>
-						<button className='btn-dark'>Sign Up</button>
+						<button className='btn-dark'>Register</button>
 					</SignUpButton>
 				</div>
 			</header>

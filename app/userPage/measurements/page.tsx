@@ -3,11 +3,11 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import UserMeasurementsForm from '../../components/UserMeasurementsForm';
 import { UserMeasurements } from '../../types/UserMeasurements';
-import { getUserId } from '@/convex/utils';
-import { useSession } from '@clerk/nextjs';
 
 export default function Measurements(): React.ReactElement {
-	const createUserMeasurement = useMutation(api.measurements.usersMesurments);
+	const createUserMeasurement = useMutation(
+		api.measurements.createUserMeasurement
+	);
 	const handleFormSubmit = (data: UserMeasurements) => {
 		const numericData = Object.fromEntries(
 			Object.entries(data).map(([key, value]) =>
@@ -16,6 +16,7 @@ export default function Measurements(): React.ReactElement {
 		);
 		createUserMeasurement(numericData as UserMeasurements);
 	};
+
 	return (
 		<article>
 			<UserMeasurementsForm onSubmit={handleFormSubmit} />
