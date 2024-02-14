@@ -1,3 +1,5 @@
+import { Id } from "@/convex/_generated/dataModel";
+
 export interface UserMeasurements {
   _id?: Id<"usersMesurments">;
   _creationTime?: number;
@@ -11,6 +13,4 @@ export interface UserMeasurements {
   thigh: number;
   hips: number;
   belly: number;
-  timeStamp: number;
 };
-type Id<T> = string;

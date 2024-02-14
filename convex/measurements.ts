@@ -39,7 +39,7 @@ export const createUserMeasurement = mutation({
 })
 
 
-export const getMesurmentsForUser = query({
+export const getAllMesurmentsForUser = query({
   args: {},
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);
@@ -51,6 +51,23 @@ export const getMesurmentsForUser = query({
     return await ctx.db
       .query("usersMesurments")
       .filter((q) => q.eq(q.field("userId"), userId))
+      .order("desc")
       .collect();
   },
 });
+
+export const getLastMeasurementForUser = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const userId = await getUserId(ctx);
+    if (!userId) {
+      return [];
+    }
+
+    return await ctx.db
+      .query("usersMesurments")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .order("desc")
+      .first();
+  }
+})
