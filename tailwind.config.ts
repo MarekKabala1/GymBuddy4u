@@ -1,3 +1,4 @@
+
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -11,12 +12,17 @@ const config: Config = {
       colors: {
         primary: {
           dark: 'rgba(var(--primary-rgba),<alpha-value>)',
-          light: 'rgba(var(--secondary-rgba),<alpha-value>)'
+          light: 'rgba(var(--secondary-rgba),<alpha-value>)',
+          blue: 'rgba(var(--text-blue-rgb),<alpha-value>)',
         }
       },
       gridTemplateColumns: {
         '1fr,2fr': '1fr 2fr'
-      }
+      },
+      fontFamily: {
+        sans: ['ui-sans-serif', 'system-ui'],
+        calligraphic: ['var(--font-irishGrove)']
+      },
     },
   },
   plugins: [],

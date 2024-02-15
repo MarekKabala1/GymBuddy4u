@@ -5,34 +5,35 @@
 html,
 body,
 :root {
-	height: 100%;
+  height: 100%;
 }
 :root {
-	--primary-rgba: 7, 14, 33;
-	--secondary-rgba: 225, 229, 230;
-	--background-end-rgb: 255, 255, 255;
+  --primary-rgba: 7, 14, 33;
+  --secondary-rgba: 225, 229, 230;
+  --text-blue-rgb: 54, 215, 183;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-	:root {
-		--foreground-rgb: 255, 255, 255;
-		--background-start-rgb: 0, 0, 0;
-		--background-end-rgb: 0, 0, 0;
-	}
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 }
 
 .btn-dark {
-	@apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm;
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm;
 }
 .btn-light {
-	@apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm;
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm;
 }
 .icon {
-	@apply w-8 h-8;
+  @apply w-8 h-8;
 }
 input {
-	@apply border border-solid rounded-md p-1 text-xs font-bold text-primary-light bg-primary-dark;
+  @apply border border-solid rounded-md p-1 text-xs font-bold text-primary-light bg-primary-dark;
 }
 label {
-	@apply text-xs font-bold text-primary-light;
+  @apply text-xs font-bold text-primary-light;
 }
