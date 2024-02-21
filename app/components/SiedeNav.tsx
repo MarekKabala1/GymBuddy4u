@@ -49,7 +49,7 @@ export default function SideNav(): React.ReactElement {
 
 	return (
 		<>
-			<header className='flex pb-4 items-center justify-between bg-primary-dark/100 md:block'>
+			<header className='flex p-4 items-center justify-between bg-primary-dark/100 md:block'>
 				<button
 					onClick={() => setIsOpen((prev) => !prev)}
 					className='md:hidden'>
@@ -77,7 +77,7 @@ export default function SideNav(): React.ReactElement {
 				className={` -translate-x-full absolute z-[99999] mt-6 transition-all duration-300 ease-out md:relative md:translate-x-0 md:block'
 		${
 			isOpen
-				? 'inset-x-4 top-11 bottom-4 pr-4 translate-x-0 block absolute bg-primary-dark bg-opacity-90'
+				? 'inset-x-0 top-11 bottom-0 pr-4 translate-x-0 block absolute bg-primary-dark bg-opacity-90'
 				: ' -translate-x-full hidden  md:translate-x-0 md:block '
 		}`}>
 				<NavLink

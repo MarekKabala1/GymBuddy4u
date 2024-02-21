@@ -27,7 +27,7 @@ const UserMeasurementsForm: React.FC<UserMeasurementsFormProps> = ({
 	return (
 		<>
 			<form
-				className='grid grid-cols-2 gap-4 justify-end p-8 md:grid-cols-3'
+				className='grid grid-cols-2 gap-4 justify-end md:grid-cols-3'
 				onSubmit={handleSubmit(onSubmitWithUserId)}>
 				<div className='flex items-center justify-center md:justify-end gap-2'>
 					<label className='label hidden lg:block'>Weight:</label>
@@ -150,7 +150,7 @@ const UserMeasurementsForm: React.FC<UserMeasurementsFormProps> = ({
 				</div>
 			</form>
 			<button
-				className='btn-light absolute z-50 right-12 sm:right-24 md:right-10 '
+				className='btn-light z-50  sm:right-24 md:right-10 '
 				onClick={handleSubmit(onSubmitWithUserId)}
 				type='submit'>
 				Submit

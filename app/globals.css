@@ -6,6 +6,10 @@ html,
 body,
 :root {
   height: 100%;
+
+}
+body{
+  overflow-y: auto;
 }
 :root {
   --primary-rgba: 7, 14, 33;
