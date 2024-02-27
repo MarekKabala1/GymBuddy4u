@@ -1,33 +1,34 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 import toast, { Toaster } from 'react-hot-toast';
 import { formatDistance } from 'date-fns';
 import { ScaleLoader } from 'react-spinners';
 
 import MeasurementsCard from '@/app/components/MeasurementCard';
-import UserMeasurementsForm from '../../components/UserMeasurementsForm';
+import UserMeasurementsForm from '@/app/components/UserMeasurementsForm';
 
-import { UserMeasurements } from '../../types/UserMeasurements';
+import { UserMeasurements } from '@/app/types/UserMeasurements';
+import { TrashIcon } from '@/app/assets/svgIcons';
 
 export default function Measurements(): React.ReactElement {
-	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements[]>(
-		[]
-	);
+	const [lastThreeUserMeasurements, setLastThreeUserMeasurements] = useState<
+		UserMeasurements[]
+	>([]);
 	const [loading, setLoading] = useState(false);
 
-	const createUserMeasurement = useMutation(
-		api.measurements.createUserMeasurement
-	);
 	const handleFormSubmit = async (data: UserMeasurements) => {
 		try {
 			setLoading(true);
 			const numericData = Object.fromEntries(
 				Object.entries(data).map(([key, value]) =>
-					key === 'userId' ? [key, value] : [key, parseFloat(value)]
+					key === 'userId' || key === 'unit'
+						? [key, value]
+						: [key, parseFloat(value)]
 				)
 			);
 			await createUserMeasurement(numericData as UserMeasurements);
@@ -39,9 +40,16 @@ export default function Measurements(): React.ReactElement {
 		}
 	};
 
-	const getUserMeasurements = useQuery(
-		api.measurements.getAllMesurmentsForUser
+	const createUserMeasurement = useMutation(
+		api.measurements.createUserMeasurement
 	);
+
+	const getUserMeasurements = useQuery(
+		api.measurements?.getAllMesurmentsForUser
+	);
+
+	const deleteMeasurement = useMutation(api.measurements.deleteUserMeasurement);
+
 	const measurements: UserMeasurements[] | undefined = getUserMeasurements;
 
 	useEffect(() => {
@@ -55,7 +63,10 @@ export default function Measurements(): React.ReactElement {
 			);
 			const lastThreeMeasurements = sortedMeasurements?.slice(0, 3);
 			setLoading(false);
-			setUserMeasurements(lastThreeMeasurements);
+			setLastThreeUserMeasurements(lastThreeMeasurements);
+		} else {
+			setLoading(false);
+			setLastThreeUserMeasurements([]);
 		}
 	}, [measurements]);
 
@@ -73,7 +84,7 @@ export default function Measurements(): React.ReactElement {
 			<UserMeasurementsForm onSubmit={handleFormSubmit} />
 
 			<div className='flex  gap-4'>
-				{userMeasurements?.map((measurement) => (
+				{lastThreeUserMeasurements?.map((measurement) => (
 					<div key={measurement._id}>
 						<h2>
 							{formatDistance(
@@ -116,6 +127,17 @@ export default function Measurements(): React.ReactElement {
 								unit='cm'
 							/>
 						</div>
+						<button
+							className='btn-danger z-50 flex justify-center items-center gap-1  sm:right-24 md:right-10 '
+							onClick={() =>
+								deleteMeasurement({
+									measurementId: measurement._id as Id<'usersMesurments'>,
+								})
+							}
+							type='button'>
+							<TrashIcon className='w-5 h-5' />
+							<p>Deleta measurement</p>
+						</button>
 					</div>
 				))}
 			</div>

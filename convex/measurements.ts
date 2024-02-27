@@ -1,6 +1,8 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { getUserId } from "./utils";
+import { userQuery } from "./users";
+import { Id } from "./_generated/dataModel";
 
 
 
@@ -16,6 +18,7 @@ export const createUserMeasurement = mutation({
     thigh: v.number(),
     hips: v.number(),
     belly: v.number(),
+    unit: v.string()
 
   },
   handler: async (ctx, args) => {
@@ -33,7 +36,8 @@ export const createUserMeasurement = mutation({
       thigh: args.thigh,
       userId: args.userId,
       weight: args.weight,
-      height: args.height
+      height: args.height,
+      unit: args.unit
     })
   }
 })
@@ -71,3 +75,25 @@ export const getLastMeasurementForUser = query({
       .first();
   }
 })
+
+export const deleteUserMeasurement = mutation({
+  args: { measurementId: v.id('usersMesurments') },
+  async handler(ctx, args) {
+    const userId = await getUserId(ctx);
+    if (!userId) {
+      console.warn("userId is null or undefined");
+      return;
+    }
+
+    const userMeasuremrnt = await ctx.db.get(args.measurementId);
+
+    if (!userMeasuremrnt) {
+      console.warn("can't find user, does not exist", userId);
+      return "User measurement not found";
+    } else {
+      await ctx.db.delete(userMeasuremrnt._id);
+      return "User measurement deleted";
+
+    }
+  },
+});

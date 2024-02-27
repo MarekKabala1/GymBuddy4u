@@ -13,4 +13,9 @@ export interface UserMeasurements {
   thigh: number;
   hips: number;
   belly: number;
+  unit: string
 };
+
+export interface IconProps {
+  className?: string;
+}

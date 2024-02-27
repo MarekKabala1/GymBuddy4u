@@ -148,6 +148,27 @@ const UserMeasurementsForm: React.FC<UserMeasurementsFormProps> = ({
 					/>
 					{errors.belly && <span>{errors.belly.message}</span>}
 				</div>
+				<div className='flex items-center justify-center gap-2'>
+					<label className='sr-only'>Unit:</label>
+					<div className='flex items-center justify-center'>
+						<input
+							type='radio'
+							{...register('unit', { required: 'Unit is required' })}
+							value='metric'
+							className='input-field max-w-[80%]'
+						/>
+						<span className='ml-1'>Metric</span>
+					</div>
+					<div className='flex items-center ml-4'>
+						<input
+							type='radio'
+							{...register('unit', { required: 'Unit is required' })}
+							value='imperial'
+						/>
+						<span className='ml-1'>Imperial</span>
+					</div>
+					{errors.unit && <span>{errors.unit.message}</span>}
+				</div>
 			</form>
 			<button
 				className='btn-light z-50  sm:right-24 md:right-10 '

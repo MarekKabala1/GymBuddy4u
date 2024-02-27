@@ -19,6 +19,7 @@ export default defineSchema({
     thigh: v.number(),
     hips: v.number(),
     belly: v.number(),
+    unit: v.string(),
   }).index("by_userId", ["userId"])
 
 })

@@ -9,26 +9,80 @@ import { api } from '@/convex/_generated/api';
 import { ScaleLoader } from 'react-spinners';
 
 import MeasurementsCard from '../components/MeasurementCard';
+
 import { UserMeasurements } from '../types/UserMeasurements';
 
 export default function UserPage(): React.ReactElement {
 	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements>();
 	const [loading, setLoading] = useState(true);
 
+	const measurementsUnit = userMeasurements?.unit === 'metric' ? 'cm' : 'in';
+
 	const getLastMeasurement = useQuery(
 		api.measurements?.getLastMeasurementForUser
 	);
-	useEffect(() => {
-		if (Array.isArray(getLastMeasurement) && getLastMeasurement.length > 0) {
-			setUserMeasurements(getLastMeasurement[0]);
-		} else if (
-			typeof getLastMeasurement === 'object' &&
-			getLastMeasurement !== null
-		) {
-			setUserMeasurements(getLastMeasurement as UserMeasurements);
+
+	const calculateBMI = async (
+		weight: number | undefined,
+		height: number | undefined,
+		unit: string | undefined
+	) => {
+		if (weight === undefined || height === undefined || unit === undefined) {
+			console.error('Weight, height, or unit is undefined');
+			return undefined;
 		}
-		setLoading(false);
+
+		if (unit === 'metric') {
+			const bmiNumber = weight / height ** 2;
+			return bmiNumber * 10000;
+		} else {
+			const inchesHeight = height * 12;
+			console.log(inchesHeight);
+			return (weight / (inchesHeight * inchesHeight)) * 703;
+		}
+	};
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const measurementsData = getLastMeasurement;
+				setUserMeasurements(measurementsData as UserMeasurements);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchData();
 	}, [getLastMeasurement]);
+
+	useEffect(() => {
+		if (!userMeasurements) return;
+
+		calculateBMI(
+			userMeasurements.weight,
+			userMeasurements.height,
+			userMeasurements.unit
+		)
+			.then((bmi) => {
+				if (!bmi) {
+					return;
+				} else if (bmi < 18.5) {
+					console.log('Underweight ');
+				} else if (bmi >= 18.5 && bmi <= 24.9) {
+					console.log('Healthy Weight');
+				} else if (bmi >= 25 && bmi <= 29.9) {
+					console.log('overweight ');
+				} else {
+					console.log('To much Mate');
+				}
+				console.log('BMI', bmi);
+			})
+			.catch((error) => {
+				console.error('Error calculating BMI:', error);
+			});
+	}, [userMeasurements]);
 
 	if (loading) {
 		return (
@@ -42,60 +96,60 @@ export default function UserPage(): React.ReactElement {
 		<article className='py-4 w-full flex flex-col gap-4 justify-center'>
 			<div className='grid grid-cols-3 grid-rows-4  h-full  place-items-center'>
 				<div className='col-start-1 row-start-1 flex flex-col justify-center items-center'>
-					<p className=' font-bold text-primary-blue '>Age</p>
-					<p>{userMeasurements?.age}</p>
+					<p className='font-bold text-primary-blue '>Age</p>
+					<p className='font-bold text-lg'>{userMeasurements?.age}</p>
 					<span>Years</span>
 				</div>
 				<div className='col-start-3 row-start-1 flex  flex-col justify-center items-center'>
 					<p className='font-bold text-primary-blue'>Height</p>
 					<p className='font-bold text-lg'>{userMeasurements?.height}</p>
-					<span>cm</span>
+					<span>{userMeasurements?.unit === 'metric' ? 'cm' : 'inch'}</span>
 				</div>
 				<div className='col-start-2 row-start-1 flex  flex-col justify-center items-center'>
 					<p className='font-bold text-primary-blue'>Weight</p>
 					<p className='font-bold text-lg'>{userMeasurements?.weight}</p>
-					<span>kg</span>
+					<span>{userMeasurements?.unit === 'metric' ? 'kg' : 'lbs'}</span>
 				</div>
 				<div className='col-start-1 row-start-2 w-max h-max flex flex-col items-center '>
 					<MeasurementsCard
 						title='Biceps'
 						userMeasurements={userMeasurements?.biceps}
-						unit='cm'
+						unit={measurementsUnit}
 					/>
 				</div>
 				<div className='col-start-3 row-start-2 w-max h-max flex flex-col items-center '>
 					<MeasurementsCard
 						title='Chest'
 						userMeasurements={userMeasurements?.chest}
-						unit='cm'
+						unit={measurementsUnit}
 					/>
 				</div>
 				<div className='col-start-3 row-start-4 w-max h-max flex flex-col items-center '>
 					<MeasurementsCard
 						title='Calves'
 						userMeasurements={userMeasurements?.calves}
-						unit='cm'
+						unit={measurementsUnit}
 					/>
 				</div>
 				<div className='col-start-3 row-start-3 w-max h-max flex flex-col items-center '>
 					<MeasurementsCard
 						title='Thigh'
 						userMeasurements={userMeasurements?.thigh}
-						unit='cm'
+						unit={measurementsUnit}
 					/>
 				</div>
 				<div className='col-start-1 row-start-4 w-max h-max flex flex-col items-center '>
 					<MeasurementsCard
 						title='Hips'
 						userMeasurements={userMeasurements?.hips}
-						unit='cm'
+						unit={measurementsUnit}
 					/>
 				</div>
 				<div className='col-start-1 row-start-3 w-max h-max flex flex-col items-center '>
 					<MeasurementsCard
 						title='Belly'
 						userMeasurements={userMeasurements?.belly}
-						unit='cm'
+						unit={measurementsUnit}
 					/>
 				</div>
 
