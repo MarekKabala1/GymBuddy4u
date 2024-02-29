@@ -1,11 +1,11 @@
 'use client';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { formatDistance } from 'date-fns';
 import { ScaleLoader } from 'react-spinners';
 
@@ -13,13 +13,15 @@ import MeasurementsCard from '@/app/components/MeasurementCard';
 import UserMeasurementsForm from '@/app/components/UserMeasurementsForm';
 
 import { UserMeasurements } from '@/app/types/UserMeasurements';
+import { useToast } from '@/app/hooks/toast';
 import { TrashIcon } from '@/app/assets/svgIcons';
 
 export default function Measurements(): React.ReactElement {
 	const [lastThreeUserMeasurements, setLastThreeUserMeasurements] = useState<
 		UserMeasurements[]
 	>([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const { showErrorToast, showSuccessToast } = useToast();
 
 	const handleFormSubmit = async (data: UserMeasurements) => {
 		try {
@@ -33,10 +35,10 @@ export default function Measurements(): React.ReactElement {
 			);
 			await createUserMeasurement(numericData as UserMeasurements);
 			setLoading(false);
-			toast.success('Measurement added successfully');
+			showSuccessToast('Measurement added successfully');
 		} catch (error) {
 			console.error('Error submitting form:', error);
-			toast.error('Failed to add measurement');
+			showErrorToast('Failed to add measurement');
 		}
 	};
 
