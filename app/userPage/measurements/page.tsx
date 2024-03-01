@@ -12,7 +12,7 @@ import { ScaleLoader } from 'react-spinners';
 import MeasurementsCard from '@/app/components/MeasurementCard';
 import UserMeasurementsForm from '@/app/components/UserMeasurementsForm';
 
-import { UserMeasurements } from '@/app/types/UserMeasurements';
+import { UserMeasurements } from '@/app/types/types';
 import { useToast } from '@/app/hooks/toast';
 import { TrashIcon } from '@/app/assets/svgIcons';
 

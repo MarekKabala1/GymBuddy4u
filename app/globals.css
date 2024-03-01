@@ -28,20 +28,32 @@ body{
 }
 
 .btn-dark {
-  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm;
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer;
 }
 .btn-light {
-  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm;
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm cursor-pointer;
 }
 .btn-danger {
-  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-danger sm:px-4 sm:text-sm;
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-danger sm:px-4 sm:text-sm cursor-pointer;
+}
+.btn-underline{
+  @apply text-primary-light border-b text-xs cursor-pointer
 }
 .icon {
   @apply w-8 h-8;
 }
-input {
+input, select {
   @apply border border-solid rounded-md p-1 text-xs font-bold text-primary-light bg-primary-dark;
 }
 label {
   @apply text-xs font-bold text-primary-light;
+}
+dialog[open]{
+  @apply opacity-100 bg-transparent flex flex-col items-end gap-4 p-2 rounded-md
+}
+dialog{
+  @apply opacity-0
+}
+::backdrop{
+  @apply bg-black opacity-50
 }

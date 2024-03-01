@@ -10,7 +10,7 @@ import { ScaleLoader } from 'react-spinners';
 
 import MeasurementsCard from '../components/MeasurementCard';
 
-import { UserMeasurements } from '../types/UserMeasurements';
+import { UserMeasurements } from '../types/types';
 
 export default function UserPage(): React.ReactElement {
 	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements>();

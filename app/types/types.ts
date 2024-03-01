@@ -31,3 +31,11 @@ export interface Workout {
   sets: number
   reps: WorkoutSet[];
 }
+
+export interface WorkoutRutine {
+  _id?: Id<"workouts">;
+  _creationTime?: number;
+  userId: string;
+  day: string;
+  name?: string;
+}

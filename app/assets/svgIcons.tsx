@@ -1,4 +1,4 @@
-import { IconProps } from '../types/UserMeasurements';
+import { IconProps } from '../types/types';
 
 export function UserIcon({ className, ...props }: IconProps) {
 	return (
@@ -221,7 +221,7 @@ export function TrashIcon({ className, ...props }: IconProps) {
 	return (
 		<svg
 			{...props}
-			className={`w-6 h-6 ${className || ''}`}
+			className={` ${className || ''}`}
 			xmlns='http://www.w3.org/2000/svg'
 			fill='none'
 			viewBox='0 0 24 24'

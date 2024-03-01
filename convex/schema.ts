@@ -20,6 +20,11 @@ export default defineSchema({
     hips: v.number(),
     belly: v.number(),
     unit: v.string(),
-  }).index("by_userId", ["userId"])
+  }).index("by_userId", ["userId"]),
+  workouts: defineTable({
+    name: v.optional(v.string()) || undefined,
+    userId: v.string(),
+    day: v.string(),
+  })
 
 })

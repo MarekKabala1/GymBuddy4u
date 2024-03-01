@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { Workout, WorkoutSet } from '../types/UserMeasurements';
+import { Workout, WorkoutSet } from '../types/types';
 import { TrashIcon } from '../assets/svgIcons';
 
 interface WorkoutFormProps {
@@ -48,6 +48,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 					<input
 						className='input-field w-[60%]'
 						type='date'
+						id='day'
 						{...register('day', { required: true })}
 						placeholder='Day'
 						defaultValue={new Date().toISOString().split('T')[0]}
@@ -59,6 +60,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 					<input
 						className='input-field w-[60%]'
 						type='text'
+						id='muscleGroup'
 						{...register('muscleGroup', { required: true })}
 						placeholder='Muscle Group'
 						defaultValue={''}
@@ -70,6 +72,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 					<input
 						className='input-field w-[60%]'
 						type='text'
+						id='exerciseName'
 						{...register('exerciseName', { required: true })}
 						placeholder='Exercise Name'
 						defaultValue={''}
@@ -81,6 +84,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 					<input
 						className='input-field w-[60%]'
 						type='number'
+						id='sets'
 						{...register('sets', { required: true })}
 						placeholder='Sets'
 						defaultValue={1}
@@ -99,6 +103,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 							{...register(`reps.${index}`, { required: true })}
 							placeholder={`Reps for Set ${index + 1}`}
 							defaultValue={set.reps}
+							id='reps'
 							onChange={(e) => {
 								const value = parseInt(e.target.value, 10);
 								setRepsValue((prevReps) =>
@@ -125,7 +130,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 					Add More Sets
 				</button>
 
-				<input type='submit' />
+				<input className='btn-light' type='submit' />
 			</form>
 		</>
 	);

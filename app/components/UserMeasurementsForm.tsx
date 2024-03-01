@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { UserMeasurements } from '../types/UserMeasurements';
+import { UserMeasurements } from '../types/types';
 import { useSession } from '@clerk/nextjs';
 
 interface UserMeasurementsFormProps {
