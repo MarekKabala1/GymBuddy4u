@@ -16,8 +16,8 @@ import { PlusIcon } from '../assets/svgIcons';
 export default function UserPage(): React.ReactElement {
 	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements>();
 	const [loading, setLoading] = useState(true);
-	const [bmiName, setBmiName] = useState<string | undefined>();
-	const [bmiValue, setBmiValue] = useState<number | undefined>();
+	const [bmiName, setBmiName] = useState<string>();
+	const [bmiValue, setBmiValue] = useState<number>();
 
 	const measurementsUnit = userMeasurements?.unit === 'metric' ? 'cm' : 'in';
 
@@ -42,7 +42,8 @@ export default function UserPage(): React.ReactElement {
 		} else {
 			const inchesHeight = height * 12;
 			console.log(inchesHeight);
-			return (weight / (inchesHeight * inchesHeight)) * 703;
+			const bmi = (weight / (inchesHeight * inchesHeight)) * 703;
+			return bmi.toFixed(2);
 		}
 	};
 
@@ -70,14 +71,21 @@ export default function UserPage(): React.ReactElement {
 			userMeasurements.unit
 		)
 			.then((bmi) => {
-				setBmiValue(bmi);
+				const bmiNumber = parseFloat(bmi as string);
+				if (isNaN(bmiNumber) || bmiNumber === undefined) {
+					console.error('BMI is NaN or undefined');
+					setBmiValue(0);
+					setBmiName('Invalid BMI');
+					return;
+				}
+				setBmiValue(bmiNumber);
 				if (!bmi) {
 					return;
-				} else if (bmi < 18.5) {
+				} else if (bmiNumber < 18.5) {
 					setBmiName('Underweight ');
-				} else if (bmi >= 18.5 && bmi <= 24.9) {
+				} else if (bmiNumber >= 18.5 && bmiNumber <= 24.9) {
 					setBmiName('Healthy Weight');
-				} else if (bmi >= 25 && bmi <= 29.9) {
+				} else if (bmiNumber >= 25 && bmiNumber <= 29.9) {
 					setBmiName('Overweight ');
 				} else {
 					setBmiName('To much Mate');
@@ -168,17 +176,8 @@ export default function UserPage(): React.ReactElement {
 				/>
 			</div>
 
-			<div className='mb-4 w-max m-auto text-center'>
-				<h2
-					className={`${
-						bmiName === 'Underweight' ||
-						bmiName === 'Overweight' ||
-						bmiName === 'To much Mate'
-							? 'font-bold text-primary-danger'
-							: 'font-bold text-primary-success '
-					}`}>
-					BMI
-				</h2>
+			<div className=' w-max m-auto text-center'>
+				<h2 className='font-bold text-primary-blue'>BMI</h2>
 				<p
 					className={`${
 						bmiName === 'Underweight' ||
@@ -194,8 +193,8 @@ export default function UserPage(): React.ReactElement {
 						bmiName === 'Underweight' ||
 						bmiName === 'Overweight' ||
 						bmiName === 'To much Mate'
-							? 'font-bold text-lg text-primary-danger'
-							: 'font-bold text-lg text-primary-success '
+							? ' text-lg text-primary-danger'
+							: ' text-lg text-primary-success '
 					}`}>
 					{bmiName}
 				</span>
