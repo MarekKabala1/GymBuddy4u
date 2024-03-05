@@ -16,7 +16,9 @@ body{
   --secondary-rgba: 225, 229, 230;
   --text-blue-rgb: 54, 215, 183;
   --danger-rgb: 255, 0, 0 ;
+  --success-rgb : 0, 255, 0;
   --background-end-rgb: 255, 255, 255;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,7 +28,9 @@ body{
     --background-end-rgb: 0, 0, 0;
   }
 }
-
+button{
+  @apply hover:text-primary-blue
+}
 .btn-dark {
   @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer;
 }
@@ -36,8 +40,11 @@ body{
 .btn-danger {
   @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-danger sm:px-4 sm:text-sm cursor-pointer;
 }
+.btn-success {
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-success sm:px-4 sm:text-sm cursor-pointer;
+}
 .btn-underline{
-  @apply text-primary-light border-b text-xs cursor-pointer
+  @apply  border-b text-xs cursor-pointer
 }
 .icon {
   @apply w-8 h-8;

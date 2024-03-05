@@ -15,6 +15,7 @@ const config: Config = {
           light: 'rgba(var(--secondary-rgba),<alpha-value>)',
           blue: 'rgba(var(--text-blue-rgb),<alpha-value>)',
           danger: 'rgba(var(--danger-rgb),<alpha-value>)',
+          success: 'rgba(var(--success-rgb),<alpha-value>)',
         }
       },
       gridTemplateColumns: {

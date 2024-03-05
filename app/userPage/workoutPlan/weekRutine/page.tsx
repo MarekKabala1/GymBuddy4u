@@ -1,52 +1,54 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-import WorkoutRutineForm from '@/app/components/WorkoutRutineForm';
-
-import { WorkoutRutine } from '@/app/types/types';
-
-import { useToast } from '@/app/hooks/toast';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { ScaleLoader } from 'react-spinners';
 import Link from 'next/link';
 
-export default function WeekRutine(): React.ReactElement {
+import { useMutation, useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+
+import WorkoutRoutineForm from '@/app/components/WorkoutRoutineForm';
+
+import { WorkoutRoutine } from '@/app/types/types';
+
+import { useToast } from '@/app/hooks/toast';
+import { ScaleLoader } from 'react-spinners';
+
+export default function WeekRoutine(): React.ReactElement {
 	const [loading, setLoading] = useState(true);
-	const [weekRutine, setWeekRutine] = useState<WorkoutRutine[]>([]);
+	const [weekRoutine, setWeekRoutine] = useState<WorkoutRoutine[]>([]);
 
 	const { showErrorToast, showSuccessToast } = useToast();
 
-	const getWeekRutine = useQuery(api.workouts?.getAllWeekRutines);
-	const createWeekRutine = useMutation(api.workouts.addWeekRutine);
-	const handleFormSubmit = async (data: WorkoutRutine) => {
+	const getWeekRoutine = useQuery(api.workouts?.getAllWeekRoutines);
+	const createWeekRoutine = useMutation(api.workouts.addWeekRoutine);
+	const handleFormSubmit = async (data: WorkoutRoutine) => {
 		try {
 			setLoading(true);
-			await createWeekRutine(data as WorkoutRutine);
+			await createWeekRoutine(data as WorkoutRoutine);
 			setLoading(false);
 			console.log(data);
-			showSuccessToast('Workout rutine created successfully');
+			showSuccessToast('Workout Routine created successfully');
 		} catch (error) {
 			console.error('Error submitting form:', error);
-			showErrorToast('Failed to create workout rutine');
+			showErrorToast('Failed to create workout Routine');
 		}
 	};
 
 	useEffect(() => {
 		setLoading(true);
 		if (
-			getWeekRutine === undefined ||
-			getWeekRutine === null ||
-			getWeekRutine.length === 0
+			getWeekRoutine === undefined ||
+			getWeekRoutine === null ||
+			getWeekRoutine.length === 0
 		) {
 			setLoading(false);
 			return;
 		}
-		if (getWeekRutine) {
-			setWeekRutine(getWeekRutine);
+		if (getWeekRoutine) {
+			setWeekRoutine(getWeekRoutine);
 			setLoading(false);
 		}
-	}, [getWeekRutine]);
+	}, [getWeekRoutine]);
 
 	if (loading) {
 		return (
@@ -58,13 +60,13 @@ export default function WeekRutine(): React.ReactElement {
 
 	return (
 		<article className='flex flex-col items-center w-full p-4 gap-4  overflow-auto'>
-			<WorkoutRutineForm onSubmit={handleFormSubmit} />
-			{weekRutine && weekRutine.length > 0 && (
+			<WorkoutRoutineForm onSubmit={handleFormSubmit} />
+			{weekRoutine && weekRoutine.length > 0 && (
 				<ul className='flex flex-col gap-4'>
-					{weekRutine.map((weekRutine) => (
-						<li key={weekRutine._id}>
+					{weekRoutine.map((weekRoutine) => (
+						<li key={weekRoutine._id}>
 							<Link href={'#'}>
-								{weekRutine.name ? weekRutine.name : weekRutine.day}
+								{weekRoutine.name ? weekRoutine.name : weekRoutine.day}
 							</Link>
 						</li>
 					))}

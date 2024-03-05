@@ -12,9 +12,9 @@ const MeasurementsCard: React.FC<MeasurementsCardProps> = ({
 }) => {
 	return (
 		<div className='mb-4'>
-			<p className='font-bold text-primary-blue border border-primary-light px-4'>
+			<h2 className='font-bold text-primary-blue border border-primary-light px-4'>
 				{title}
-			</p>
+			</h2>
 			<div className='flex gap-4 justify-center items-center border border-dotted border-primary-light'>
 				<p className='font-bold text-lg'>{userMeasurements}</p>
 				<span>{unit}</span>

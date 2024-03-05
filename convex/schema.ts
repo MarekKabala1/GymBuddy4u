@@ -22,7 +22,7 @@ export default defineSchema({
     unit: v.string(),
   }).index("by_userId", ["userId"]),
   workouts: defineTable({
-    name: v.optional(v.string()) || undefined,
+    name: v.string(),
     userId: v.string(),
     day: v.string(),
   })

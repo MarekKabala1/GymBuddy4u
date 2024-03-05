@@ -32,10 +32,10 @@ export interface Workout {
   reps: WorkoutSet[];
 }
 
-export interface WorkoutRutine {
+export interface WorkoutRoutine {
   _id?: Id<"workouts">;
   _creationTime?: number;
   userId: string;
   day: string;
-  name?: string;
+  name: string;
 }

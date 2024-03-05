@@ -11,10 +11,13 @@ import { ScaleLoader } from 'react-spinners';
 import MeasurementsCard from '../components/MeasurementCard';
 
 import { UserMeasurements } from '../types/types';
+import { PlusIcon } from '../assets/svgIcons';
 
 export default function UserPage(): React.ReactElement {
 	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements>();
 	const [loading, setLoading] = useState(true);
+	const [bmiName, setBmiName] = useState<string | undefined>();
+	const [bmiValue, setBmiValue] = useState<number | undefined>();
 
 	const measurementsUnit = userMeasurements?.unit === 'metric' ? 'cm' : 'in';
 
@@ -34,7 +37,8 @@ export default function UserPage(): React.ReactElement {
 
 		if (unit === 'metric') {
 			const bmiNumber = weight / height ** 2;
-			return bmiNumber * 10000;
+			const bmi = bmiNumber * 10000;
+			return bmi.toFixed(2);
 		} else {
 			const inchesHeight = height * 12;
 			console.log(inchesHeight);
@@ -66,18 +70,18 @@ export default function UserPage(): React.ReactElement {
 			userMeasurements.unit
 		)
 			.then((bmi) => {
+				setBmiValue(bmi);
 				if (!bmi) {
 					return;
 				} else if (bmi < 18.5) {
-					console.log('Underweight ');
+					setBmiName('Underweight ');
 				} else if (bmi >= 18.5 && bmi <= 24.9) {
-					console.log('Healthy Weight');
+					setBmiName('Healthy Weight');
 				} else if (bmi >= 25 && bmi <= 29.9) {
-					console.log('overweight ');
+					setBmiName('Overweight ');
 				} else {
-					console.log('To much Mate');
+					setBmiName('To much Mate');
 				}
-				console.log('BMI', bmi);
 			})
 			.catch((error) => {
 				console.error('Error calculating BMI:', error);
@@ -164,31 +168,45 @@ export default function UserPage(): React.ReactElement {
 				/>
 			</div>
 
+			<div className='mb-4 w-max m-auto text-center'>
+				<h2
+					className={`${
+						bmiName === 'Underweight' ||
+						bmiName === 'Overweight' ||
+						bmiName === 'To much Mate'
+							? 'font-bold text-primary-danger'
+							: 'font-bold text-primary-success '
+					}`}>
+					BMI
+				</h2>
+				<p
+					className={`${
+						bmiName === 'Underweight' ||
+						bmiName === 'Overweight' ||
+						bmiName === 'To much Mate'
+							? 'font-bold text-lg text-primary-danger'
+							: 'font-bold text-lg text-primary-success '
+					}`}>
+					{bmiValue}
+				</p>
+				<span
+					className={`${
+						bmiName === 'Underweight' ||
+						bmiName === 'Overweight' ||
+						bmiName === 'To much Mate'
+							? 'font-bold text-lg text-primary-danger'
+							: 'font-bold text-lg text-primary-success '
+					}`}>
+					{bmiName}
+				</span>
+			</div>
+
 			<Link
+				role='button'
 				href='/userPage/measurements'
-				className='btn-light text-primary-blue m-auto flex gap-1 items-center'>
-				<Plus />
-				Add Measurement
+				className='btn-light text-primary-blue m-auto flex gap-1 items-center hover:text-primary-blue'>
+				<PlusIcon /> Measurement
 			</Link>
 		</article>
-	);
-}
-
-function Plus(props: {}) {
-	return (
-		<svg
-			{...props}
-			xmlns='http://www.w3.org/2000/svg'
-			fill='none'
-			viewBox='0 0 24 24'
-			strokeWidth='1.5'
-			stroke='currentColor'
-			className='w-6 h-6'>
-			<path
-				strokeLinecap='round'
-				strokeLinejoin='round'
-				d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-			/>
-		</svg>
 	);
 }

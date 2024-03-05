@@ -2,11 +2,11 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getUserId } from "./utils"
 
-export const addWeekRutine = mutation({
+export const addWeekRoutine = mutation({
   args: {
     userId: v.string(),
     day: v.string(),
-    name: v.optional(v.string()) || undefined
+    name: v.string()
   },
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);
@@ -21,7 +21,7 @@ export const addWeekRutine = mutation({
   }
 })
 
-export const getAllWeekRutines = query({
+export const getAllWeekRoutines = query({
   args: {},
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);
