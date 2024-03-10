@@ -33,7 +33,7 @@ export interface Workout {
 }
 
 export interface WorkoutRoutine {
-  _id?: Id<"workouts">;
+  _id?: Id<"workoutsWeekRoutine">;
   _creationTime?: number;
   userId: string;
   day: string;

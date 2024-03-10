@@ -6,13 +6,16 @@ import { useSession } from '@clerk/nextjs';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { WorkoutRoutine } from '../types/types';
+import { PlusIcon } from '../assets/svgIcons';
 
 interface WorkoutRoutineFormProps {
 	onSubmit: SubmitHandler<WorkoutRoutine>;
+	onCloseDialog: () => void;
 }
 
 const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({
 	onSubmit,
+	onCloseDialog,
 }) => {
 	const [day, setDay] = useState<string>();
 	const weekDay = [
@@ -57,10 +60,12 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({
 
 	return (
 		<form
-			className='flex flex-col gap-4 items-end justify-center '
+			className='flex flex-col gap-4 items-end justify-center'
 			onSubmit={handleSubmit(onSubmitHandler)}>
-			<div className='flex items-center justify-between w-full'>
-				<label htmlFor='day'>Chose day:</label>
+			<div className='flex items-center justify-end gap-4 w-full'>
+				<label className=' tracking-wider' htmlFor='day'>
+					Chose day :
+				</label>
 				<select
 					className='w-[60%] input-field'
 					id='day'
@@ -75,10 +80,17 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({
 						</option>
 					))}
 				</select>
-				{errors.day && <span>{errors.day.message}</span>}
+				{errors.day && (
+					<span className={`${errors.day.message ? 'block' : 'hidden'}`}>
+						{errors.day.message}
+					</span>
+				)}
 			</div>
-			<div className='flex items-center justify-between w-full'>
-				<label htmlFor='name'>Name for your routine</label>
+			<div className='flex items-center justify-end gap-4 w-full'>
+				<label className=' tracking-wider' htmlFor='name'>
+					{' '}
+					Name :
+				</label>
 				<input
 					className='input-field w-[60%]'
 					type='text'
@@ -86,11 +98,23 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({
 					{...register('name', { required: true, maxLength: 10 })}
 					placeholder='Name for Routine'
 				/>
-				{errors.name && <span>{errors.name.message}</span>}
+				{errors.name && (
+					<span className={`${errors.name.message ? 'block' : 'hidden'}`}>
+						{errors.name.message}
+					</span>
+				)}
 			</div>
-			<button className='btn-light' type='submit'>
-				Add to Routine
-			</button>
+			<div className='flex  justify-end gap-4 w-full'>
+				<button onClick={() => onCloseDialog()} className='btn-danger'>
+					Close
+				</button>
+				<button
+					className='btn-light flex justify-center items-center gap-1'
+					type='submit'>
+					<PlusIcon className='w-5 h-5' />
+					<p>Add</p>
+				</button>
+			</div>
 		</form>
 	);
 };

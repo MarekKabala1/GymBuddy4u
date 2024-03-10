@@ -21,7 +21,7 @@ export default defineSchema({
     belly: v.number(),
     unit: v.string(),
   }).index("by_userId", ["userId"]),
-  workouts: defineTable({
+  workoutsWeekRoutine: defineTable({
     name: v.string(),
     userId: v.string(),
     day: v.string(),

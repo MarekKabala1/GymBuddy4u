@@ -22,7 +22,7 @@ export default function Workoutt(): React.ReactElement {
 	const [weekRoutine, setWeekRoutine] = useState<WorkoutRoutine[]>([]);
 	const [activeIndex, setActiveIndex] = useState<number | null>(0);
 	const [openMenuId, setOpenMenuId] = useState<
-		Id<'workouts'> | undefined | null
+		Id<'workoutsWeekRoutine'> | undefined | null
 	>(null);
 
 	const dialog = useRef<HTMLDialogElement>(null);
@@ -31,7 +31,7 @@ export default function Workoutt(): React.ReactElement {
 
 	const getWeekRoutine = useQuery(api.workouts?.getAllWeekRoutines);
 
-	const createWeekRoutine = useMutation(api.workouts.addWeekRoutine);
+	const createWeekRoutine = useMutation(api.workouts?.addDayForWeekRoutine);
 
 	const handleFormSubmit = async (data: WorkoutRoutine) => {
 		try {
@@ -53,7 +53,7 @@ export default function Workoutt(): React.ReactElement {
 		}
 	};
 
-	const handleClick = (id: Id<'workouts'>) => {
+	const handleClick = (id: Id<'workoutsWeekRoutine'>) => {
 		if (id === undefined) {
 			return;
 		}
@@ -152,55 +152,63 @@ export default function Workoutt(): React.ReactElement {
 				type='button'
 				onClick={() => dialog.current?.showModal()}>
 				<PlusIcon className='w-5 h-5 inline-block mr-1' />
-				Day Routine
+				Add Days to this Routine
 			</button>
 			<dialog ref={dialog}>
-				<WorkoutRoutineForm onSubmit={handleFormSubmit} />
-				<button onClick={() => dialog.current?.close()} className='btn-danger'>
-					Close
-				</button>
+				<WorkoutRoutineForm
+					onSubmit={handleFormSubmit}
+					onCloseDialog={() => dialog.current?.close()}
+				/>
 			</dialog>
 			{weekRoutine && weekRoutine.length > 0 && activeIndex === 0 && (
-				<ul className='flex flex-wrap gap-4 items-center justify-center'>
-					{weekRoutine.map((weekRoutine) => (
-						<li key={weekRoutine._id}>
-							<div className='flex gap-1 items-center h-full'>
-								<div className='flex flex-col gap-1 items-center'>
-									<p className='text-xs'>{weekRoutine.day}</p>
-									{weekRoutine.name ? weekRoutine.name : weekRoutine.day}
-								</div>
-								<div className='flex flex-col gap-1 relative'>
-									<button
-										data-menu-id={weekRoutine._id}
-										onClick={() =>
-											handleClick(weekRoutine._id as Id<'workouts'>)
-										}>
-										<SubMenuIcon className='w-5 h-5 inline-block cursor-pointer' />
-									</button>
-									<div
-										className={`${
-											openMenuId === weekRoutine._id
-												? 'border rounded-lg border-primary-blue p-1 flex flex-col gap-1 absolute top-8 right-0'
-												: 'hidden'
-										}  `}>
+				<div className='w-full'>
+					<ul className='flex flex-col gap-4 w-full items-start justify-center'>
+						{weekRoutine.map((weekRoutine) => (
+							<Link
+								href={`/userPage/workoutPlan/${weekRoutine._id}`}
+								key={weekRoutine._id}>
+								<div className='flex gap-1 items-center h-full'>
+									<div className='flex gap-1 items-center justify-center'>
+										<p className='flex gap-1 items-center justify-center text-xs w-[35px] aspect-square border border-primary-light p-1 bg-primary-dark rounded-md'>
+											{weekRoutine.day.slice(0, 3)}
+										</p>
+										{weekRoutine.name ? weekRoutine.name : weekRoutine.day}
+									</div>
+									<div className='flex flex-col gap-1 relative'>
+										<button
+											data-menu-id={weekRoutine._id}
+											onClick={() =>
+												handleClick(
+													weekRoutine._id as Id<'workoutsWeekRoutine'>
+												)
+											}>
+											<SubMenuIcon className='w-5 h-5 inline-block cursor-pointer' />
+										</button>
 										<div
-											role='button'
-											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
-											<TrashIcon className='w-4 h-4 inline-block stroke-primary-danger ' />
-											<p className='text-primary-danger text-xs'>Delete</p>
-										</div>
-										<div
-											role='button'
-											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
-											<EditIcon className='w-4 h-4  inline-block' />
-											<p className='text-xs'>Edit</p>
+											className={`${
+												openMenuId === weekRoutine._id
+													? 'border rounded-lg border-primary-blue p-1 flex flex-col gap-1 absolute top-8 right-0'
+													: 'hidden'
+											}  `}>
+											<div
+												role='button'
+												className='flex gap-1 cursor-pointer hover:text-primary-blue'>
+												<TrashIcon className='w-4 h-4 inline-block stroke-primary-danger ' />
+												<p className='text-primary-danger text-xs'>Delete</p>
+											</div>
+											<div
+												role='button'
+												className='flex gap-1 cursor-pointer hover:text-primary-blue'>
+												<EditIcon className='w-4 h-4  inline-block' />
+												<p className='text-xs'>Edit</p>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</li>
-					))}
-				</ul>
+							</Link>
+						))}
+					</ul>
+				</div>
 			)}
 			<Toaster position='bottom-center' />
 		</article>

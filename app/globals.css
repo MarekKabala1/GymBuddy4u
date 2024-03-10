@@ -7,6 +7,7 @@ body,
 :root {
   height: 100%;
 
+
 }
 body{
   overflow-y: auto;
@@ -35,7 +36,7 @@ button{
   @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer;
 }
 .btn-light {
-  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm cursor-pointer;
+  @apply border-2 border-solid  rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm cursor-pointer;
 }
 .btn-danger {
   @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-danger sm:px-4 sm:text-sm cursor-pointer;
@@ -56,11 +57,35 @@ label {
   @apply text-xs font-bold text-primary-light;
 }
 dialog[open]{
-  @apply opacity-100 bg-transparent flex flex-col items-end gap-4 p-2 rounded-md
+  @apply opacity-100 p-8 bg-primary-dark bg-opacity-60 flex flex-col items-end gap-4  rounded-md
 }
 dialog{
   @apply opacity-0
 }
 ::backdrop{
-  @apply bg-black opacity-50
+  @apply bg-black opacity-80
 }
+.progressBar::before{
+    content: "";
+    position: absolute;
+    top: -25px;
+    left: -25px;
+    width: 230px;
+    height:115px;
+    border-radius:50% / 100% 100% 0 0 ;
+    mask: radial-gradient(at 50% 100%, white 55%, transparent 55.5%);
+    mask-mode: alpha;
+    -webkit-mask: radial-gradient(at 50% 100%, #0000 55%, #000 55.5%);
+    -webkit-mask-mode: alpha;
+    background: conic-gradient(from 0.75turn at 50% 100%, blue calc(var(--percentage) * 1% / 2), orange calc(var(--percentage) * 1% / 2 + 0.1%));
+  }
+  @keyframes progress {
+    0% { --percentage:0 }
+    100% { --percentage:var(--bmi)  }
+  }
+  @property --percentage {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+

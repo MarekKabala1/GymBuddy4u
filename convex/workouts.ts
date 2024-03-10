@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getUserId } from "./utils"
 
-export const addWeekRoutine = mutation({
+export const addDayForWeekRoutine = mutation({
   args: {
     userId: v.string(),
     day: v.string(),
@@ -13,7 +13,7 @@ export const addWeekRoutine = mutation({
     if (!userId) {
       throw new Error("no user with that id found");
     }
-    await ctx.db.insert('workouts', {
+    await ctx.db.insert('workoutsWeekRoutine', {
       name: args.name,
       userId: args.userId,
       day: args.day
@@ -31,9 +31,10 @@ export const getAllWeekRoutines = query({
     }
 
     return await ctx.db
-      .query("workouts")
+      .query("workoutsWeekRoutine")
       .filter((q) => q.eq(q.field("userId"), userId))
       .order("desc")
       .collect();
   },
 });
+

@@ -12,6 +12,7 @@ import MeasurementsCard from '../components/MeasurementCard';
 
 import { UserMeasurements } from '../types/types';
 import { PlusIcon } from '../assets/svgIcons';
+import BMIPanel from '../components/BmiBarIndicator';
 
 export default function UserPage(): React.ReactElement {
 	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements>();
@@ -176,8 +177,9 @@ export default function UserPage(): React.ReactElement {
 				/>
 			</div>
 
-			<div className=' w-max m-auto text-center'>
+			<div className=' flex flex-col justify-center items-center'>
 				<h2 className='font-bold text-primary-blue'>BMI</h2>
+				<BMIPanel bmi={bmiValue} />
 				<p
 					className={`${
 						bmiName === 'Underweight' ||
