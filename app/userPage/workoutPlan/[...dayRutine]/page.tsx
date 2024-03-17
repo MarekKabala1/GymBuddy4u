@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -12,12 +12,16 @@ import { useToast } from '@/app/hooks/toast';
 import { ScaleLoader } from 'react-spinners';
 
 import AddWorkoutForm from '@/app/components/AddWorkoutForm';
+import { BackArrowIcon, PlusIcon } from '@/app/assets/svgIcons';
+import { useRouter } from 'next/navigation';
 
 export default function WeekRoutine(): React.ReactElement {
 	const [loading, setLoading] = useState(true);
 	const [weekRoutine, setWeekRoutine] = useState<WorkoutRoutine[]>([]);
 
 	const { showErrorToast, showSuccessToast } = useToast();
+	const router = useRouter();
+	const dialog = useRef<HTMLDialogElement>(null);
 
 	// const getWeekRoutine = useQuery(api.workoutsWeekRoutine?.getAllWeekRoutines);
 	// const createWeekRoutine = useMutation(
@@ -61,8 +65,26 @@ export default function WeekRoutine(): React.ReactElement {
 	// }
 
 	return (
-		<article className='flex flex-col items-center w-full p-4 gap-4  overflow-auto'>
-			<AddWorkoutForm onSubmit={handleFormSubmit} />
+		<article className='flex flex-col  w-full p-4 gap-4  overflow-auto'>
+			<button className='flex gap-1 items-center' onClick={router.back}>
+				<BackArrowIcon className='w-5 h-5 inline-block' />
+				<p className='text-xs'>Go Back</p>
+			</button>
+			<div className='flex flex-col items-center w-full  gap-4  overflow-auto'>
+				<button
+					className='btn-dark'
+					type='button'
+					onClick={() => dialog.current?.showModal()}>
+					<PlusIcon className='w-5 h-5 inline-block mr-1' />
+					Add Workout
+				</button>
+				<dialog ref={dialog}>
+					<AddWorkoutForm
+						onSubmit={handleFormSubmit}
+						onCloseDialog={() => dialog.current?.close()}
+					/>
+				</dialog>
+			</div>
 		</article>
 	);
 }

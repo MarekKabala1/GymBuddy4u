@@ -6,7 +6,8 @@ export const addDayForWeekRoutine = mutation({
   args: {
     userId: v.string(),
     day: v.string(),
-    name: v.string()
+    name: v.string(),
+    restDay: v.optional(v.boolean())
   },
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);
@@ -16,7 +17,8 @@ export const addDayForWeekRoutine = mutation({
     await ctx.db.insert('workoutsWeekRoutine', {
       name: args.name,
       userId: args.userId,
-      day: args.day
+      day: args.day,
+      restDay: args.restDay
     })
   }
 })

@@ -25,6 +25,7 @@ export default defineSchema({
     name: v.string(),
     userId: v.string(),
     day: v.string(),
+    restDay: v.optional(v.boolean())
   })
 
 })

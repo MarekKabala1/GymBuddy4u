@@ -79,13 +79,4 @@ dialog{
     -webkit-mask-mode: alpha;
     background: conic-gradient(from 0.75turn at 50% 100%, blue calc(var(--percentage) * 1% / 2), orange calc(var(--percentage) * 1% / 2 + 0.1%));
   }
-  @keyframes progress {
-    0% { --percentage:0 }
-    100% { --percentage:var(--bmi)  }
-  }
-  @property --percentage {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-  }
 

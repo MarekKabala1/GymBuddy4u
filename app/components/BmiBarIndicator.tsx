@@ -14,7 +14,7 @@ const BMIPanel: React.FC<{ bmi: number | undefined }> = ({ bmi }) => {
 		}
 	};
 
-	const getProgressBarWidth = (bmi: number) => {
+	const getProgressBarPercentage = (bmi: number) => {
 		if (bmi < 0) {
 			return '0%';
 		} else if (bmi > 40) {
@@ -31,40 +31,46 @@ const BMIPanel: React.FC<{ bmi: number | undefined }> = ({ bmi }) => {
 	}, [bmi]);
 
 	return (
-		<>
-			<div className='m-1 flex justify-center items-center relative'>
-				<div
-					className={` relative top-0 left-0 w-[230px] aspect-[2/1] rounded-[50%] box-border border-t-[25px] border-r-[25px] border-l-[25px]
+		<div className='m-1 flex justify-center items-center relative'>
+			<div
+				className={` relative top-0 left-0 w-[230px] aspect-[2/1] rounded-[50%] box-border border-[25px] border-b-0 border-primary-blue
 					 `}
-					//Adjust border color to BMI%
+				//TODO:Adjust border color to BMI%
+				style={{
+					borderRadius: '50% / 100% 100% 0 0',
+					animation: 'progress 2s 0.5s forwards',
+				}}>
+				<div
 					style={{
+						content: '""',
+						position: 'absolute',
+						top: '-25px',
+						left: '-25px',
+						width: '230px',
+						height: '115px',
 						borderRadius: '50% / 100% 100% 0 0',
-						animation: 'progress 2s 0.5s forwards',
-						borderLeftColor: 'yellow',
-						borderRightColor: 'red',
-						borderTopColor: 'green',
+						mask: 'radial-gradient(at 50% 100%, white 55%, transparent 55.5%)',
+						maskMode: 'alpha',
+						WebkitMask: 'radial-gradient(at 50% 100%, #0000 55%, #000 55.5%)',
+						background: `conic-gradient(from 0.75turn at 50% 100%, ${barColor} calc(var(--percentage) * 1% / 2), transparent calc( var(--percentage) * 1% / 2 + 0.1%))`,
 					}}>
-					<div
-						style={{
-							content: '""',
-							position: 'absolute',
-							top: '-25px',
-							left: '-25px',
-							width: '230px',
-							height: '115px',
-							borderRadius: '50% / 100% 100% 0 0',
-							mask: 'radial-gradient(at 50% 100%, white 55%, transparent 55.5%)',
-							maskMode: 'alpha',
-							WebkitMask: 'radial-gradient(at 50% 100%, #0000 55%, #000 55.5%)',
-							background: `conic-gradient(from 0.75turn at 50% 100%, ${barColor} calc(${
-								parseFloat(getProgressBarWidth(bmi as number)) * 1
-							}% / 2), transparent calc(${
-								parseFloat(getProgressBarWidth(bmi as number)) * 1
-							}% / 2 + 0.1%))`,
-						}}></div>
+					<style>
+						{`
+                @property --percentage {
+									syntax: '<number>';
+									inherits: true;
+									initial-value: 0;
+								}
+
+                @keyframes progress {
+									0% { --percentage:0 }
+									100% { --percentage:${parseFloat(getProgressBarPercentage(bmi as number))}
+								}
+            `}
+					</style>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

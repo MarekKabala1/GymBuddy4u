@@ -3,13 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Workout, WorkoutSet } from '../types/types';
-import { TrashIcon } from '../assets/svgIcons';
+import { PlusIcon, TrashIcon } from '../assets/svgIcons';
 
 interface WorkoutFormProps {
 	onSubmit: SubmitHandler<Workout>;
+	onCloseDialog: () => void;
 }
 
-const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
+const WorkoutForm: React.FC<WorkoutFormProps> = ({
+	onSubmit,
+	onCloseDialog,
+}) => {
 	const {
 		register,
 		handleSubmit,
@@ -44,28 +48,21 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 				className='flex flex-col gap-4 items-end justify-center'
 				onSubmit={handleSubmit(onSubmitHandler)}>
 				<div className='flex items-center justify-between w-full'>
-					<label htmlFor='day'>Day:</label>
-					<input
-						className='input-field w-[60%]'
-						type='date'
-						id='day'
-						{...register('day', { required: true })}
-						placeholder='Day'
-						defaultValue={new Date().toISOString().split('T')[0]}
-					/>
-					{errors.day && <span>{errors.day.message}</span>}
-				</div>
-				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='muscleGroup'>Muscle Group:</label>
 					<input
 						className='input-field w-[60%]'
 						type='text'
 						id='muscleGroup'
 						{...register('muscleGroup', { required: true })}
-						placeholder='Muscle Group'
+						placeholder='Muscle Group optional'
 						defaultValue={''}
 					/>
-					{errors.muscleGroup && <span>{errors.muscleGroup.message}</span>}
+					{errors.muscleGroup && (
+						<span
+							className={`${errors.muscleGroup.message ? 'block' : 'hidden'}`}>
+							{errors.muscleGroup.message}
+						</span>
+					)}
 				</div>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='exerciseName'>Exercise Name:</label>
@@ -77,7 +74,12 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 						placeholder='Exercise Name'
 						defaultValue={''}
 					/>
-					{errors.exerciseName && <span>{errors.exerciseName.message}</span>}
+					{errors.exerciseName && (
+						<span
+							className={`${errors.exerciseName.message ? 'block' : 'hidden'}`}>
+							{errors.exerciseName.message}
+						</span>
+					)}
 				</div>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='sets'>Number of Sets:</label>
@@ -124,14 +126,23 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit }) => {
 				))}
 
 				<button
-					className='btn-light'
+					className='btn-underline text-primary-light'
 					type='button'
 					onClick={handleAddRepsField}>
-					Add More Sets
+					{/* <PlusIcon className='w-5 h-5' /> */}
+					<p>Add More Sets</p>
 				</button>
-
-				<input className='btn-light' type='submit' />
+				<div className='flex  justify-end gap-4 w-full'>
+					<button onClick={() => onCloseDialog()} className='btn-danger'>
+						Close
+					</button>
+					<input className='btn-light hover:text-primary-blue' type='submit' />
+				</div>
 			</form>
+			<p className='text-xs text-primary-danger'>
+				If all the sets has same reps value don&apos;t have to add more fields
+				for reps.
+			</p>
 		</>
 	);
 };

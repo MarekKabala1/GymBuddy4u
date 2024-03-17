@@ -25,8 +25,7 @@ export interface WorkoutSet {
 }
 
 export interface Workout {
-  day: string;
-  muscleGroup: string;
+  muscleGroup?: string;
   exerciseName: string;
   sets: number
   reps: WorkoutSet[];
@@ -38,4 +37,5 @@ export interface WorkoutRoutine {
   userId: string;
   day: string;
   name: string;
+  restDay?: boolean
 }
