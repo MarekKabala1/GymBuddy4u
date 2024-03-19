@@ -40,3 +40,25 @@ export const getAllWeekRoutines = query({
   },
 });
 
+export const deleteDayRoutine = mutation({
+  args: { routineId: v.id('workoutsWeekRoutine') },
+  async handler(ctx, args) {
+    const user = await getUserId(ctx);
+    if (!user) {
+      console.warn("No User found");
+      return;
+    }
+
+    const dayRoutine = await ctx.db.get(args.routineId);
+
+    if (!dayRoutine) {
+      console.warn("can't find user, does not exist");
+      return "User routine not found";
+    } else {
+      await ctx.db.delete(dayRoutine._id);
+      return "User routine deleted";
+
+    }
+  },
+});
+

@@ -26,6 +26,6 @@ export default defineSchema({
     userId: v.string(),
     day: v.string(),
     restDay: v.optional(v.boolean())
-  })
+  }).index("by_userId", ["userId"]),
 
 })

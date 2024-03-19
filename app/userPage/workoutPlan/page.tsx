@@ -1,23 +1,31 @@
 'use client';
-import { EditIcon, PlusIcon, SubMenuIcon, TrashIcon } from '@/app/assets/svgIcons';
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+
+import { useQuery, useMutation } from 'convex/react';
+import { Id } from '@/convex/_generated/dataModel';
+import { api } from '@/convex/_generated/api';
+
+import { Workout, WorkoutRoutine } from '@/app/types/types';
+
 import WorkoutForm from '@/app/components/AddWorkoutForm';
 import WorkoutRoutineForm from '@/app/components/WorkoutRoutineForm';
-import { useToast } from '@/app/hooks/toast';
-import { Workout, WorkoutRoutine } from '@/app/types/types';
-import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
-import { useQuery, useMutation } from 'convex/react';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+
+import { EditIcon, PlusIcon, SubMenuIcon, TrashIcon } from '@/app/assets/svgIcons';
+
 import { Toaster } from 'react-hot-toast';
+import { useToast } from '@/app/hooks/toast';
+
 import { ScaleLoader } from 'react-spinners';
 
 export default function Workoutt(): React.ReactElement {
 	const [loading, setLoading] = useState(true);
-	const [weekRoutine, setWeekRoutine] = useState<WorkoutRoutine[]>([]);
-	const [activeIndex, setActiveIndex] = useState<number | null>(0);
+	const [showModal, setShowModal] = useState(false);
 	const [openMenuId, setOpenMenuId] = useState<Id<'workoutsWeekRoutine'> | undefined | null>(null);
+	const [activeIndex, setActiveIndex] = useState<number | null>(0);
 	const [weekDays, setWeekDays] = useState<string[]>([]);
+	const [idToDelete, setIdToDelete] = useState<Id<'workoutsWeekRoutine'> | null>(null);
+	const [weekRoutine, setWeekRoutine] = useState<WorkoutRoutine[]>([]);
 
 	const dialog = useRef<HTMLDialogElement>(null);
 
@@ -26,6 +34,8 @@ export default function Workoutt(): React.ReactElement {
 	const getWeekRoutine = useQuery(api.workouts?.getAllWeekRoutines);
 
 	const createWeekRoutine = useMutation(api.workouts?.addDayForWeekRoutine);
+
+	const deleteRoutine = useMutation(api.workouts?.deleteDayRoutine);
 
 	const handleFormSubmit = async (data: WorkoutRoutine) => {
 		try {
@@ -47,7 +57,7 @@ export default function Workoutt(): React.ReactElement {
 	};
 
 	//close tolpit when click outside
-	const handleClickOutside = (event: MouseEvent) => {
+	const handleClickOutsideToClosePopUp = (event: MouseEvent) => {
 		const target = event.target as HTMLElement;
 
 		if (openMenuId && !target.closest(`[data-menu-id="${openMenuId}"]`)) {
@@ -55,14 +65,14 @@ export default function Workoutt(): React.ReactElement {
 		}
 	};
 	useEffect(() => {
-		document.body.addEventListener('click', handleClickOutside);
+		document.body.addEventListener('click', handleClickOutsideToClosePopUp);
 
 		return () => {
-			document.body.removeEventListener('click', handleClickOutside);
+			document.body.removeEventListener('click', handleClickOutsideToClosePopUp);
 		};
 	}, [openMenuId]);
 
-	//sort by day for fetched data
+	//sort by week day  fetched data
 	const sortedWeekRoutine = <T extends { day: string }>(data: T[]): T[] => {
 		const daysOfWeekOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -86,6 +96,19 @@ export default function Workoutt(): React.ReactElement {
 			setLoading(false);
 		}
 	}, [getWeekRoutine]);
+
+	// delete routine
+	const handleRoutineDelete = async () => {
+		try {
+			await deleteRoutine({
+				routineId: idToDelete as Id<'workoutsWeekRoutine'>,
+			});
+			setShowModal(false);
+			showSuccessToast('Workout Routine deleted successfully');
+		} catch (error) {
+			showErrorToast('Failed to delete workout Routine');
+		}
+	};
 
 	if (loading) {
 		return (
@@ -142,10 +165,17 @@ export default function Workoutt(): React.ReactElement {
 										className={`${
 											openMenuId === weekRoutine._id ? 'border rounded-lg border-primary-blue p-1 flex flex-col gap-1 absolute -top-2 right-4' : 'hidden'
 										}  `}>
-										<div role='button' className='flex gap-1 cursor-pointer hover:text-primary-blue'>
+										<button
+											data-menu-id={weekRoutine._id}
+											role='button'
+											onClick={() => {
+												setShowModal(true);
+												setIdToDelete(weekRoutine._id as Id<'workoutsWeekRoutine'>);
+											}}
+											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
 											<TrashIcon className='w-4 h-4 inline-block stroke-primary-danger ' />
 											<p className='text-primary-danger text-xs'>Delete</p>
-										</div>
+										</button>
 										<div role='button' className='flex gap-1 cursor-pointer hover:text-primary-blue'>
 											<EditIcon className='w-4 h-4  inline-block' />
 											<p className='text-xs'>Edit</p>
@@ -155,6 +185,45 @@ export default function Workoutt(): React.ReactElement {
 							</div>
 						))}
 					</ul>
+				</div>
+			)}
+			{showModal && (
+				<div className='fixed z-50 inset-0 overflow-y-auto'>
+					<div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+						<div className='fixed inset-0 transition-opacity' aria-hidden='true'>
+							<div className='absolute inset-0 bg-gray-500 opacity-75'></div>
+						</div>
+						<span className='hidden sm:inline-block sm:align-middle sm:h-screen' aria-hidden='true'>
+							&#8203;
+						</span>
+						<div className='inline-block align-bottom bg-primary-dark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full'>
+							<div className='bg-primary-dark px-4 pt-5 pb-4 sm:p-6 sm:pb-4'>
+								<div className='sm:flex sm:items-start'>
+									<div className='mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left'>
+										<h3 className='text-lg leading-6 font-medium text-primary-danger'>Delete Workout Routine</h3>
+										<div className='mt-2'>
+											<p className='text-sm text-primary-danger'>Are you sure you want to delete this workout routine?</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className='bg-primary-dark px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
+								<button
+									onClick={handleRoutineDelete}
+									type='button'
+									className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-danger text-base font-medium text-primary-light hover:text-primary-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue sm:ml-3 sm:w-auto sm:text-sm'>
+									Delete
+								</button>
+
+								<button
+									onClick={() => setShowModal(false)}
+									type='button'
+									className='mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-primary-light text-base font-medium text-primary-dark hover:text-primary-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'>
+									Cancel
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			)}
 			<Toaster position='bottom-center' />
