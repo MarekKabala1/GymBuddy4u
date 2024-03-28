@@ -1,4 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {};
 
-module.exports = nextConfig
+(module.exports = {
+	async headers() {
+		return [
+			{
+				source: '/userPage/workoutPlan',
+				headers: [
+					{
+						key: 'Cache-Control',
+						value: 'no-store',
+					},
+				],
+			},
+		];
+	},
+}),
+	nextConfig;

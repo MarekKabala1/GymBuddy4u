@@ -9,6 +9,9 @@ import { WorkoutRoutine } from '../types/types';
 
 import { PlusIcon } from '../assets/svgIcons';
 
+import crypto from 'crypto';
+import { revalidatePath } from 'next/cache';
+
 const toCapitalCase = (word: string) => {
 	return (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
 };
@@ -17,14 +20,29 @@ interface WorkoutRoutineFormProps {
 	onSubmit: SubmitHandler<WorkoutRoutine>;
 	onCloseDialog: () => void;
 	weekRoutineDays: string[];
+	dataToEdit?: WorkoutRoutine;
+	isEditing?: boolean;
 }
 
 const weekDay = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onCloseDialog, weekRoutineDays }) => {
+const routineId = crypto.randomBytes(16).toString('hex');
+
+const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onCloseDialog, weekRoutineDays, dataToEdit, isEditing }) => {
 	const [day, setDay] = useState<string>();
 	const [restDay, setRestDay] = useState(false);
 	const [displayError, setDisplayError] = useState(false);
+	const [editData, setEditData] = useState<WorkoutRoutine | null>(null);
+
+	useEffect(() => {
+		if (isEditing && dataToEdit) {
+			setEditData(dataToEdit);
+			console.log(editData);
+		} else {
+			setEditData(null);
+		}
+	}, [isEditing, dataToEdit, editData]);
+
 	const {
 		register,
 		handleSubmit,
@@ -32,7 +50,9 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 		setError,
 		clearErrors,
 		formState: { errors },
-	} = useForm<WorkoutRoutine>();
+	} = useForm<WorkoutRoutine>({
+		defaultValues: { day: day, name: editData?.name, restDay: false },
+	});
 	const session = useSession();
 	const userId = session.session?.user?.id as string;
 
@@ -40,19 +60,30 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 		setRestDay(e.target.checked);
 	};
 
-	const onSubmitHandler: SubmitHandler<WorkoutRoutine> = (data: WorkoutRoutine) => {
-		data.name = data.name?.split(' ').map(toCapitalCase(data.name)).join(' ');
-		const dayExists = weekRoutineDays.includes(day as string);
-		if (dayExists) {
-			setError('day', { type: 'manual', message: 'Day already exists' });
-			setDisplayError(true);
+	const onSubmitHandler = (data: WorkoutRoutine) => {
+		if (isEditing && editData) {
+			data.name = data.name?.split(' ').map(toCapitalCase(data.name)).join(' ');
+
+			// Update the existing entry
+			const updatedRoutine = { ...data, routineId: editData.routineId, userId: editData.userId };
+			onSubmit(updatedRoutine);
+			reset(updatedRoutine);
 		} else {
-			clearErrors('day');
-			setDisplayError(false);
-			// Submit the data if the day is unique
-			const dataWithUserId = { ...data, userId, restDay };
-			onSubmit(dataWithUserId);
-			reset(data);
+			// Handle submit for new entry
+			data.name = data.name?.split(' ').map(toCapitalCase(data.name)).join(' ');
+			const dayExists = weekRoutineDays.includes(day as string);
+			if (dayExists) {
+				setError('day', { type: 'manual', message: 'Day already exists' });
+				setDisplayError(true);
+			} else {
+				clearErrors('day');
+				setDisplayError(false);
+				// Submit the data if the day is unique
+				const createRoutine = { ...data, restDay, routineId, userId };
+				onSubmit(createRoutine);
+
+				reset(createRoutine);
+			}
 		}
 	};
 
@@ -66,15 +97,20 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 	}, []);
 
 	useEffect(() => {
-		setDisplayError(!!errors.day || !!errors.name);
-		setTimeout(() => {
+		if (isEditing && editData) {
+			setDay(editData.day);
 			setDisplayError(false);
-		}, 3000);
-	}, [errors.day, errors.name]);
+		} else {
+			setDisplayError(!!errors.day || !!errors.name);
+			setTimeout(() => {
+				setDisplayError(false);
+			}, 3000);
+		}
+	}, [editData, errors.day, errors.name, isEditing]);
 
 	return (
 		<form className='flex flex-col gap-4 items-end justify-center' onSubmit={handleSubmit(onSubmitHandler)}>
-			<div className='flex items-center justify-end gap-4 w-full'>
+			<div className='flex items-center justify-start gap-4 w-full'>
 				{displayError && <span className='text-xs text-primary-danger'>{errors.day?.message}</span>}
 				{!displayError && (
 					<>
@@ -84,8 +120,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 						<select
 							className='w-[60%] input-field'
 							id='day'
-							value={day}
-							defaultValue={day as string}
+							value={editData?.day || day}
 							{...register('day', { required: true })}
 							onChange={(e) => setDay(e.target.value)}
 							required>
@@ -98,7 +133,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 					</>
 				)}
 			</div>
-			<div className='flex items-center justify-end gap-4 w-full'>
+			<div className='flex items-center justify-start gap-11 w-full'>
 				{displayError && errors.name && <span className='text-xs text-primary-danger'>{errors.name.message}</span>}
 				{!displayError && (
 					<>
@@ -108,6 +143,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 						</label>
 						<input
 							className='input-field w-[60%]'
+							defaultValue={editData?.name || ''}
 							type='text'
 							id='name'
 							{...register('name', { required: 'Name is required, max length is 10 characters', maxLength: 10 })}
@@ -116,10 +152,10 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 					</>
 				)}
 			</div>
-			<div className='flex items-center justify-end gap-4 w-full'>
+			<div className='flex items-center justify-start gap-4 w-full'>
 				<label className=' tracking-wider' htmlFor='description'>
 					{false}
-					Mark as a Rest Day :
+					Rest Day :
 				</label>
 				<input
 					className='input-field w-[60%]'
@@ -127,17 +163,17 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 					id='restDay'
 					{...register('restDay')}
 					placeholder='restDay'
-					checked={restDay}
+					checked={editData?.restDay || restDay}
 					onChange={handleCheckboxChange}
 				/>
 			</div>
-			<div className='flex  justify-end gap-4 w-full'>
+			<div className='flex justify-end gap-4 w-full '>
 				<button onClick={() => onCloseDialog()} className='btn-danger'>
 					Close
 				</button>
 				<button className='btn-light flex justify-center items-center gap-1' type='submit'>
-					<PlusIcon className='w-5 h-5' />
-					<p>Add</p>
+					<PlusIcon className={isEditing ? 'hidden' : 'w-5 h-5 inline-block'} />
+					{isEditing ? 'Update' : 'Add'}
 				</button>
 			</div>
 		</form>

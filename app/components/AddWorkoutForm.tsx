@@ -10,10 +10,7 @@ interface WorkoutFormProps {
 	onCloseDialog: () => void;
 }
 
-const WorkoutForm: React.FC<WorkoutFormProps> = ({
-	onSubmit,
-	onCloseDialog,
-}) => {
+const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) => {
 	const {
 		register,
 		handleSubmit,
@@ -44,9 +41,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({
 
 	return (
 		<>
-			<form
-				className='flex flex-col gap-4 items-end justify-center'
-				onSubmit={handleSubmit(onSubmitHandler)}>
+			<form className='flex flex-col gap-4 items-end justify-center' onSubmit={handleSubmit(onSubmitHandler)}>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='muscleGroup'>Muscle Group:</label>
 					<input
@@ -57,12 +52,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({
 						placeholder='Muscle Group optional'
 						defaultValue={''}
 					/>
-					{errors.muscleGroup && (
-						<span
-							className={`${errors.muscleGroup.message ? 'block' : 'hidden'}`}>
-							{errors.muscleGroup.message}
-						</span>
-					)}
+					{errors.muscleGroup && <span className={`${errors.muscleGroup.message ? 'block' : 'hidden'}`}>{errors.muscleGroup.message}</span>}
 				</div>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='exerciseName'>Exercise Name:</label>
@@ -74,30 +64,16 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({
 						placeholder='Exercise Name'
 						defaultValue={''}
 					/>
-					{errors.exerciseName && (
-						<span
-							className={`${errors.exerciseName.message ? 'block' : 'hidden'}`}>
-							{errors.exerciseName.message}
-						</span>
-					)}
+					{errors.exerciseName && <span className={`${errors.exerciseName.message ? 'block' : 'hidden'}`}>{errors.exerciseName.message}</span>}
 				</div>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='sets'>Number of Sets:</label>
-					<input
-						className='input-field w-[60%]'
-						type='number'
-						id='sets'
-						{...register('sets', { required: true })}
-						placeholder='Sets'
-						defaultValue={1}
-					/>
+					<input className='input-field w-[60%]' type='number' id='sets' {...register('sets', { required: true })} placeholder='Sets' defaultValue={1} />
 					{errors.sets && <span>{errors.sets.message}</span>}
 				</div>
 
 				{repsValue.map((set, index) => (
-					<div
-						key={index}
-						className='flex items-center justify-between w-full relative'>
+					<div key={index} className='flex items-center justify-between w-full relative'>
 						<label htmlFor='reps'>Reps for Set {index + 1}:</label>
 						<input
 							className='input-field w-[60%] '
@@ -108,27 +84,17 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({
 							id='reps'
 							onChange={(e) => {
 								const value = parseInt(e.target.value, 10);
-								setRepsValue((prevReps) =>
-									prevReps.map((prevSet, i) =>
-										i === index ? { reps: value } : prevSet
-									)
-								);
+								setRepsValue((prevReps) => prevReps.map((prevSet, i) => (i === index ? { reps: value } : prevSet)));
 							}}
 						/>
 						{errors.sets && <span>{errors.sets.message}</span>}
-						<button
-							type='button'
-							onClick={() => handleDeleteSet(index)}
-							className='ml-2 text-red-500 cursor-pointer absolute right-5'>
+						<button type='button' onClick={() => handleDeleteSet(index)} className='ml-2 text-red-500 cursor-pointer absolute right-5'>
 							<TrashIcon className='w-4 h-4 ' />
 						</button>
 					</div>
 				))}
 
-				<button
-					className='btn-underline text-primary-light'
-					type='button'
-					onClick={handleAddRepsField}>
+				<button className='btn-underline text-primary-light' type='button' onClick={handleAddRepsField}>
 					{/* <PlusIcon className='w-5 h-5' /> */}
 					<p>Add More Sets</p>
 				</button>
@@ -139,10 +105,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({
 					<input className='btn-light hover:text-primary-blue' type='submit' />
 				</div>
 			</form>
-			<p className='text-xs text-primary-danger'>
-				If all the sets has same reps value don&apos;t have to add more fields
-				for reps.
-			</p>
+			<p className='text-xs text-primary-danger'>If all the sets has same reps value don&apos;t have to add more fields for reps.</p>
 		</>
 	);
 };

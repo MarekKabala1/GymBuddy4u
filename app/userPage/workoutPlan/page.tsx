@@ -17,6 +17,7 @@ import { Toaster } from 'react-hot-toast';
 import { useToast } from '@/app/hooks/toast';
 
 import { ScaleLoader } from 'react-spinners';
+import { revalidatePath } from 'next/cache';
 
 export default function Workoutt(): React.ReactElement {
 	const [loading, setLoading] = useState(true);
@@ -24,8 +25,9 @@ export default function Workoutt(): React.ReactElement {
 	const [openMenuId, setOpenMenuId] = useState<Id<'workoutsWeekRoutine'> | undefined | null>(null);
 	const [activeIndex, setActiveIndex] = useState<number | null>(0);
 	const [weekDays, setWeekDays] = useState<string[]>([]);
-	const [idToDelete, setIdToDelete] = useState<Id<'workoutsWeekRoutine'> | null>(null);
+	const [id, setId] = useState<Id<'workoutsWeekRoutine'> | null>(null);
 	const [weekRoutine, setWeekRoutine] = useState<WorkoutRoutine[]>([]);
+	const [editedRoutine, setEditedRoutine] = useState<WorkoutRoutine | null>(null);
 
 	const dialog = useRef<HTMLDialogElement>(null);
 
@@ -36,6 +38,8 @@ export default function Workoutt(): React.ReactElement {
 	const createWeekRoutine = useMutation(api.workouts?.addDayForWeekRoutine);
 
 	const deleteRoutine = useMutation(api.workouts?.deleteDayRoutine);
+
+	const editRoutine = useMutation(api.workouts?.updateDayRoutine);
 
 	const handleFormSubmit = async (data: WorkoutRoutine) => {
 		try {
@@ -95,13 +99,45 @@ export default function Workoutt(): React.ReactElement {
 
 			setLoading(false);
 		}
-	}, [getWeekRoutine]);
+		// console.log(editedRoutine);
+	}, [editedRoutine, getWeekRoutine]);
 
+	///edit routine
+	const handleEdit = (id: Id<'workoutsWeekRoutine'>) => {
+		const routineToEdit = weekRoutine.find((item) => item._id === id);
+
+		if (routineToEdit) {
+			setEditedRoutine(routineToEdit);
+			dialog.current?.showModal();
+		} else {
+			setEditedRoutine(null);
+			showErrorToast('Failed to edit workout Routine');
+		}
+	};
+
+	const handleEditFormSubmit = async (data: WorkoutRoutine) => {
+		try {
+			const editedData = {
+				...data,
+				_id: id as Id<'workoutsWeekRoutine'>,
+			};
+
+			await editRoutine(data as WorkoutRoutine);
+
+			dialog.current?.close();
+			setEditedRoutine(null);
+
+			showSuccessToast('Workout Routine updated successfully');
+		} catch (error) {
+			dialog.current?.close();
+			showErrorToast('Failed to update workout Routine');
+		}
+	};
 	// delete routine
 	const handleRoutineDelete = async () => {
 		try {
 			await deleteRoutine({
-				routineId: idToDelete as Id<'workoutsWeekRoutine'>,
+				id: id as Id<'workoutsWeekRoutine'>,
 			});
 			setShowModal(false);
 			showSuccessToast('Workout Routine deleted successfully');
@@ -142,7 +178,28 @@ export default function Workoutt(): React.ReactElement {
 				Add Days to this Routine
 			</button>
 			<dialog ref={dialog}>
-				<WorkoutRoutineForm onSubmit={handleFormSubmit} onCloseDialog={() => dialog.current?.close()} weekRoutineDays={weekDays} />
+				{editedRoutine ? (
+					<WorkoutRoutineForm
+						onSubmit={handleEditFormSubmit}
+						onCloseDialog={() => {
+							dialog.current?.close();
+							setEditedRoutine(null);
+						}}
+						weekRoutineDays={weekDays}
+						dataToEdit={editedRoutine}
+						isEditing={true}
+					/>
+				) : (
+					// Render the regular add form
+					<WorkoutRoutineForm
+						onSubmit={handleFormSubmit}
+						onCloseDialog={() => {
+							dialog.current?.close();
+							setEditedRoutine(null);
+						}}
+						weekRoutineDays={weekDays}
+					/>
+				)}
 			</dialog>
 			{weekRoutine && weekRoutine.length > 0 && activeIndex === 0 && (
 				<div className='w-full'>
@@ -170,16 +227,19 @@ export default function Workoutt(): React.ReactElement {
 											role='button'
 											onClick={() => {
 												setShowModal(true);
-												setIdToDelete(weekRoutine._id as Id<'workoutsWeekRoutine'>);
+												setId(weekRoutine._id as Id<'workoutsWeekRoutine'>);
 											}}
 											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
 											<TrashIcon className='w-4 h-4 inline-block stroke-primary-danger ' />
 											<p className='text-primary-danger text-xs'>Delete</p>
 										</button>
-										<div role='button' className='flex gap-1 cursor-pointer hover:text-primary-blue'>
+										<button
+											data-menu-id={weekRoutine._id}
+											onClick={() => handleEdit(weekRoutine._id as Id<'workoutsWeekRoutine'>)}
+											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
 											<EditIcon className='w-4 h-4  inline-block' />
 											<p className='text-xs'>Edit</p>
-										</div>
+										</button>
 									</div>
 								</div>
 							</div>

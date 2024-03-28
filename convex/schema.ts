@@ -22,10 +22,12 @@ export default defineSchema({
     unit: v.string(),
   }).index("by_userId", ["userId"]),
   workoutsWeekRoutine: defineTable({
+    creationTime: v.optional(v.number()),
+    routineId: v.string(),
     name: v.string(),
     userId: v.string(),
     day: v.string(),
     restDay: v.optional(v.boolean())
-  }).index("by_userId", ["userId"]),
+  }).index("by_routineId", ["routineId"]),
 
 })
