@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useSession } from '@clerk/nextjs';
 
@@ -10,7 +10,6 @@ import { WorkoutRoutine } from '../types/types';
 import { PlusIcon } from '../assets/svgIcons';
 
 import crypto from 'crypto';
-import { revalidatePath } from 'next/cache';
 
 const toCapitalCase = (word: string) => {
 	return (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
@@ -35,13 +34,17 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 	const [editData, setEditData] = useState<WorkoutRoutine | null>(null);
 
 	useEffect(() => {
-		if (isEditing && dataToEdit) {
+		if (isEditing === true && dataToEdit) {
 			setEditData(dataToEdit);
-			console.log(editData);
+			setDay(dataToEdit.day);
+			setRestDay(dataToEdit?.restDay || false);
 		} else {
 			setEditData(null);
+			setDay(undefined);
+			setRestDay(false);
 		}
-	}, [isEditing, dataToEdit, editData]);
+		console.log(isEditing, dataToEdit);
+	}, [isEditing, dataToEdit]);
 
 	const {
 		register,
@@ -51,7 +54,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 		clearErrors,
 		formState: { errors },
 	} = useForm<WorkoutRoutine>({
-		defaultValues: { day: day, name: editData?.name, restDay: false },
+		defaultValues: { day: dataToEdit?.day, name: dataToEdit?.name, restDay: dataToEdit?.restDay },
 	});
 	const session = useSession();
 	const userId = session.session?.user?.id as string;
@@ -64,12 +67,11 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 		if (isEditing && editData) {
 			data.name = data.name?.split(' ').map(toCapitalCase(data.name)).join(' ');
 
-			// Update the existing entry
 			const updatedRoutine = { ...data, routineId: editData.routineId, userId: editData.userId };
 			onSubmit(updatedRoutine);
-			reset(updatedRoutine);
+			reset(data);
+			setEditData(null);
 		} else {
-			// Handle submit for new entry
 			data.name = data.name?.split(' ').map(toCapitalCase(data.name)).join(' ');
 			const dayExists = weekRoutineDays.includes(day as string);
 			if (dayExists) {
@@ -82,7 +84,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 				const createRoutine = { ...data, restDay, routineId, userId };
 				onSubmit(createRoutine);
 
-				reset(createRoutine);
+				reset(data);
 			}
 		}
 	};
@@ -98,7 +100,6 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 
 	useEffect(() => {
 		if (isEditing && editData) {
-			setDay(editData.day);
 			setDisplayError(false);
 		} else {
 			setDisplayError(!!errors.day || !!errors.name);
@@ -154,7 +155,6 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 			</div>
 			<div className='flex items-center justify-start gap-4 w-full'>
 				<label className=' tracking-wider' htmlFor='description'>
-					{false}
 					Rest Day :
 				</label>
 				<input
@@ -163,7 +163,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 					id='restDay'
 					{...register('restDay')}
 					placeholder='restDay'
-					checked={editData?.restDay || restDay}
+					checked={restDay}
 					onChange={handleCheckboxChange}
 				/>
 			</div>

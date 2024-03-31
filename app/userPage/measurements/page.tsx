@@ -1,24 +1,32 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
+
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-
-import { Toaster } from 'react-hot-toast';
-import { formatDistance } from 'date-fns';
-import { ScaleLoader } from 'react-spinners';
 
 import MeasurementsCard from '@/app/components/MeasurementCard';
 import UserMeasurementsForm from '@/app/components/UserMeasurementsForm';
 
 import { UserMeasurements } from '@/app/types/types';
-import { useToast } from '@/app/hooks/toast';
 import { TrashIcon } from '@/app/assets/svgIcons';
+
+import { useToast } from '@/app/hooks/toast';
+import { ScaleLoader } from 'react-spinners';
+
+import { formatDistance } from 'date-fns';
+import { Toaster } from 'react-hot-toast';
+import { useSession } from '@clerk/nextjs';
 
 export default function Measurements(): React.ReactElement {
 	const [lastThreeUserMeasurements, setLastThreeUserMeasurements] = useState<UserMeasurements[]>([]);
 	const [loading, setLoading] = useState(true);
 	const { showErrorToast, showSuccessToast } = useToast();
+	const session = useSession();
+
+	const userMeasurements = useQuery(api.measurements.getAllMesurmentsForUser);
+	const deleteMeasurement = useMutation(api.measurements.deleteUserMeasurement);
+	const createMeasurement = useMutation(api.measurements.createUserMeasurement);
 
 	const handleFormSubmit = async (data: UserMeasurements) => {
 		try {
@@ -26,7 +34,7 @@ export default function Measurements(): React.ReactElement {
 			const numericData = Object.fromEntries(
 				Object.entries(data).map(([key, value]) => (key === 'userId' || key === 'unit' ? [key, value] : [key, parseFloat(value)]))
 			);
-			await createUserMeasurement(numericData as UserMeasurements);
+			await createMeasurement(numericData as UserMeasurements);
 			setLoading(false);
 			showSuccessToast('Measurement added successfully');
 		} catch (error) {
@@ -34,12 +42,6 @@ export default function Measurements(): React.ReactElement {
 			showErrorToast('Failed to add measurement');
 		}
 	};
-
-	const createUserMeasurement = useMutation(api.measurements.createUserMeasurement);
-
-	const userMeasurements = useQuery(api.measurements.getAllMesurmentsForUser);
-
-	const deleteMeasurement = useMutation(api.measurements.deleteUserMeasurement);
 
 	const measurements = userMeasurements;
 
@@ -90,11 +92,8 @@ export default function Measurements(): React.ReactElement {
 						</div>
 						<button
 							className='btn-danger z-50 flex justify-center items-center gap-1  sm:right-24 md:right-10 '
-							onClick={() =>
-								deleteMeasurement({
-									measurementId: measurement._id as Id<'usersMesurments'>,
-								})
-							}
+							id={measurement._id}
+							onClick={() => deleteMeasurement({ measurementId: measurement._id as Id<'usersMesurments'> })}
 							type='button'>
 							<TrashIcon className='w-5 h-5' />
 							<p>Deleta measurement</p>

@@ -1,6 +1,8 @@
 import { httpRouter } from "convex/server";
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import { httpAction } from "./_generated/server"
+import { UserMeasurements } from "../app/types/types";
+// import { submitFormMeasurementAction } from "../app/userPage/measurements/action";
 
 
 const http = httpRouter()
@@ -46,5 +48,48 @@ http.route({
     }
   })
 })
+http.route({
+  path: "/userPage/measurements",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const data = await request.json() as UserMeasurements
+    try {
+
+
+      const result = await ctx.runMutation(api.measurements.createUserMeasurement, {
+        age: data.age,
+        biceps: data.biceps,
+        chest: data.chest,
+        calves: data.calves,
+        belly: data.belly,
+        hips: data.hips,
+        thigh: data.thigh,
+        userId: data.userId,
+        weight: data.weight,
+        height: data.height,
+        unit: data.unit,
+      })
+      console.log('All done')
+      return new Response(JSON.stringify(result), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    } catch (err) {
+
+      console.error(err)
+      return new Response(null, {
+        status: 400,
+      })
+    }
+  }),
+});
+// http.route({
+//   path: "/userPage/measurements",
+//   method: "GET",
+//   handler: submitFormMeasurementAction
+// })
+
+
+
 
 export default http

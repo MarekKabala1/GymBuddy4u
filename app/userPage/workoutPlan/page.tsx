@@ -121,9 +121,7 @@ export default function Workoutt(): React.ReactElement {
 				...data,
 				_id: id as Id<'workoutsWeekRoutine'>,
 			};
-
 			await editRoutine(data as WorkoutRoutine);
-
 			dialog.current?.close();
 			setEditedRoutine(null);
 

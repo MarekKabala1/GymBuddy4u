@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { getUserId } from "./utils";
 
 
@@ -41,19 +41,33 @@ export const createUserMeasurement = mutation({
   }
 })
 
-
-export const getAllMesurmentsForUser = query({
-  args: {},
+export const getMeasurementsForLoggedUser = query({
+  args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const userId = await getUserId(ctx);
-
-    if (!userId) {
+    const id = await getUserId(ctx);
+    if (!id) {
       return [];
     }
 
     return await ctx.db
       .query("usersMesurments")
-      .filter((q) => q.eq(q.field("userId"), userId))
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .order("desc")
+      .collect();
+  }
+})
+export const getAllMesurmentsForUser = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const id = await getUserId(ctx);
+
+    if (!id) {
+      return [];
+    }
+
+    return await ctx.db
+      .query("usersMesurments")
+      .filter((q) => q.eq(q.field("userId"), id))
       .order("desc")
       .collect();
   },
@@ -84,13 +98,13 @@ export const deleteUserMeasurement = mutation({
       return;
     }
 
-    const userMeasuremrnt = await ctx.db.get(args.measurementId);
+    const userMeasurement = await ctx.db.get(args.measurementId);
 
-    if (!userMeasuremrnt) {
+    if (!userMeasurement) {
       console.warn("can't find user, does not exist", userId);
       return "User measurement not found";
     } else {
-      await ctx.db.delete(userMeasuremrnt._id);
+      await ctx.db.delete(userMeasurement._id);
       return "User measurement deleted";
 
     }
