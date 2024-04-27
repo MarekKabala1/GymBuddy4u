@@ -33,19 +33,6 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 	const [displayError, setDisplayError] = useState(false);
 	const [editData, setEditData] = useState<WorkoutRoutine | null>(null);
 
-	useEffect(() => {
-		if (isEditing === true && dataToEdit) {
-			setEditData(dataToEdit);
-			setDay(dataToEdit.day);
-			setRestDay(dataToEdit?.restDay || false);
-		} else {
-			setEditData(null);
-			setDay(undefined);
-			setRestDay(false);
-		}
-		console.log(isEditing, dataToEdit);
-	}, [isEditing, dataToEdit]);
-
 	const {
 		register,
 		handleSubmit,
@@ -88,12 +75,25 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 			}
 		}
 	};
-
 	const getTheDay = () => {
 		const date = new Date();
 		let day = weekDay[date.getDay()];
 		return day;
 	};
+
+	useEffect(() => {
+		if (isEditing === true && dataToEdit) {
+			setEditData(dataToEdit);
+			setDay(dataToEdit.day);
+			setRestDay(dataToEdit?.restDay || false);
+		} else {
+			setEditData(null);
+			setDay(undefined);
+			setRestDay(false);
+		}
+		console.log(isEditing, dataToEdit);
+	}, [isEditing, dataToEdit]);
+
 	useEffect(() => {
 		setDay(getTheDay());
 	}, []);
@@ -118,19 +118,25 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 						<label className=' tracking-wider' htmlFor='day'>
 							Chose day :
 						</label>
-						<select
-							className='w-[60%] input-field'
-							id='day'
-							value={editData?.day || day}
-							{...register('day', { required: true })}
-							onChange={(e) => setDay(e.target.value)}
-							required>
-							{Array.from(weekDay).map((days) => (
-								<option key={days} value={days}>
-									{days}
-								</option>
-							))}
-						</select>
+						{isEditing ? (
+							<p key={editData?._id} className='text-xs text-primary-danger'>
+								Can&#39;t change the day. Delete and add new !
+							</p>
+						) : (
+							<select
+								className='w-[60%] input-field'
+								id='day'
+								value={editData?.day || day}
+								{...register('day', { required: true })}
+								onChange={(e) => setDay(e.target.value)}
+								required>
+								{Array.from(weekDay).map((days) => (
+									<option key={days} value={days}>
+										{days}
+									</option>
+								))}
+							</select>
+						)}
 					</>
 				)}
 			</div>

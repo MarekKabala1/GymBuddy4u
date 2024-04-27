@@ -104,7 +104,7 @@ export default function Workoutt(): React.ReactElement {
 
 	///edit routine
 	const handleEdit = (id: Id<'workoutsWeekRoutine'>) => {
-		const routineToEdit = weekRoutine.find((item) => item._id === id);
+		const routineToEdit = getWeekRoutine?.find((item) => item._id === id);
 
 		if (routineToEdit) {
 			setEditedRoutine(routineToEdit);
@@ -114,6 +114,7 @@ export default function Workoutt(): React.ReactElement {
 			showErrorToast('Failed to edit workout Routine');
 		}
 	};
+	useEffect(() => {}, [editedRoutine, getWeekRoutine, showErrorToast]);
 
 	const handleEditFormSubmit = async (data: WorkoutRoutine) => {
 		try {
@@ -204,7 +205,7 @@ export default function Workoutt(): React.ReactElement {
 					<ul className='flex flex-col gap-4 w-full items-start justify-center'>
 						{weekRoutine.map((weekRoutine) => (
 							<div key={weekRoutine._id} className='flex justify-between items-center w-full'>
-								<Link className='hover:text-primary-blue' href={`/userPage/workoutPlan/${weekRoutine._id}`} key={weekRoutine._id}>
+								<Link className='hover:text-primary-blue' href={`/userPage/workoutPlan/addWorkouts/${weekRoutine.routineId}`} key={weekRoutine._id}>
 									<div className='flex gap-2 items-center h-full'>
 										<p className='flex gap-1 items-center justify-center text-xs w-[35px] aspect-square border border-primary-light p-1 bg-primary-dark rounded-md'>
 											{weekRoutine.day.slice(0, 3)}
@@ -218,7 +219,7 @@ export default function Workoutt(): React.ReactElement {
 									</button>
 									<div
 										className={`${
-											openMenuId === weekRoutine._id ? 'border rounded-lg border-primary-blue p-1 flex flex-col gap-1 absolute -top-2 right-4' : 'hidden'
+											openMenuId === weekRoutine._id ? 'border rounded-lg border-primary-blue p-2 flex flex-col gap-1 absolute -top-2 right-4' : 'hidden'
 										}  `}>
 										<button
 											data-menu-id={weekRoutine._id}
@@ -228,15 +229,15 @@ export default function Workoutt(): React.ReactElement {
 												setId(weekRoutine._id as Id<'workoutsWeekRoutine'>);
 											}}
 											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
-											<TrashIcon className='w-4 h-4 inline-block stroke-primary-danger ' />
-											<p className='text-primary-danger text-xs'>Delete</p>
+											<TrashIcon className='w-5 h-5 inline-block stroke-primary-danger ' />
+											<p className='text-primary-danger text-sm'>Delete</p>
 										</button>
 										<button
 											data-menu-id={weekRoutine._id}
 											onClick={() => handleEdit(weekRoutine._id as Id<'workoutsWeekRoutine'>)}
 											className='flex gap-1 cursor-pointer hover:text-primary-blue'>
-											<EditIcon className='w-4 h-4  inline-block' />
-											<p className='text-xs'>Edit</p>
+											<EditIcon className='w-5 h-5  inline-block' />
+											<p className='text-sm'>Edit</p>
 										</button>
 									</div>
 								</div>

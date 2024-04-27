@@ -29,5 +29,15 @@ export default defineSchema({
     day: v.string(),
     restDay: v.optional(v.boolean())
   }).index("by_routineId", ["routineId"]),
+  workouts: defineTable({
+    name: v.string(),
+    userId: v.string(),
+    routineId: v.string(),
+    muscleGroup: v.string(),
+    sets: v.number(),
+    repsValue: v.array(v.object({
+      reps: v.number()
+    })),
+  }).index("by_routineId", ["routineId"])
 
 })

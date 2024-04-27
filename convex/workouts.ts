@@ -1,7 +1,7 @@
 import { v } from "convex/values";
-import { ActionCtx, MutationCtx, QueryCtx, mutation, query } from "./_generated/server";
+import { QueryCtx, mutation, query } from "./_generated/server";
 import { getUserId } from "./utils"
-import { Doc, Id } from "./_generated/dataModel";
+
 
 
 export async function getSingleDayRoutine(
@@ -31,6 +31,51 @@ export const getDayRoutine = query({
       .collect();
   },
 });
+
+export const addWorkoutForDayRoutine = mutation({
+  args: {
+    name: v.string(),
+    userId: v.string(),
+    routineId: v.string(),
+    muscleGroup: v.string(),
+    sets: v.number(),
+    repsValue: v.array(v.object({
+      reps: v.number()
+    },
+    )),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getUserId(ctx);
+    if (!userId) {
+      throw new Error("no user with that id found");
+    }
+    await ctx.db.insert('workouts', {
+      name: args.name,
+      userId: args.userId,
+      routineId: args.routineId,
+      muscleGroup: args.muscleGroup,
+      sets: args.sets,
+      repsValue: args.repsValue
+    })
+  }
+})
+
+export const getWorkoutsForTheDay = query({
+  args: {
+    routineId: v.string(),
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getUserId(ctx);
+    if (!userId) {
+      return [];
+    }
+    return await ctx.db
+      .query("workouts")
+      .filter((q) => q.eq(q.field("routineId"), args.routineId))
+      .collect();
+  },
+})
 
 
 export const addDayForWeekRoutine = mutation({

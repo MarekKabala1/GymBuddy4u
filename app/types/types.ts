@@ -25,10 +25,15 @@ export interface WorkoutSet {
 }
 
 export interface Workout {
-  muscleGroup?: string;
-  exerciseName: string;
+  _id?: Id<"workouts">;
+  _creationTime?: number;
+  muscleGroup: string;
+  name: string;
+  repsValue: Array<number>;
+  routineId: string;
+  userId: string;
   sets: number
-  reps: WorkoutSet[];
+
 }
 
 export interface WorkoutRoutine {

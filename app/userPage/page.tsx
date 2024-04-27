@@ -22,15 +22,9 @@ export default function UserPage(): React.ReactElement {
 
 	const measurementsUnit = userMeasurements?.unit === 'metric' ? 'cm' : 'in';
 
-	const getLastMeasurement = useQuery(
-		api.measurements?.getLastMeasurementForUser
-	);
+	const getLastMeasurement = useQuery(api.measurements?.getLastMeasurementForUser);
 
-	const calculateBMI = async (
-		weight: number | undefined,
-		height: number | undefined,
-		unit: string | undefined
-	) => {
+	const calculateBMI = async (weight: number | undefined, height: number | undefined, unit: string | undefined) => {
 		if (weight === undefined || height === undefined || unit === undefined) {
 			console.error('Weight, height, or unit is undefined');
 			return undefined;
@@ -66,11 +60,7 @@ export default function UserPage(): React.ReactElement {
 	useEffect(() => {
 		if (!userMeasurements) return;
 
-		calculateBMI(
-			userMeasurements.weight,
-			userMeasurements.height,
-			userMeasurements.unit
-		)
+		calculateBMI(userMeasurements.weight, userMeasurements.height, userMeasurements.unit)
 			.then((bmi) => {
 				const bmiNumber = parseFloat(bmi as string);
 				if (isNaN(bmiNumber) || bmiNumber === undefined) {
@@ -106,8 +96,8 @@ export default function UserPage(): React.ReactElement {
 	}
 
 	return (
-		<article className='py-4 w-full flex flex-col gap-4 justify-center'>
-			<div className='grid grid-cols-3 grid-rows-4  h-full  place-items-center'>
+		<article className='py-4 w-full  flex flex-col gap-4 justify-center'>
+			<div className='grid  grid-cols-3 grid-rows-4 place-items-center'>
 				<div className='col-start-1 row-start-1 flex flex-col justify-center items-center'>
 					<p className='font-bold text-primary-blue '>Age</p>
 					<p className='font-bold text-lg'>{userMeasurements?.age}</p>
@@ -124,67 +114,40 @@ export default function UserPage(): React.ReactElement {
 					<span>{userMeasurements?.unit === 'metric' ? 'kg' : 'lbs'}</span>
 				</div>
 				<div className='col-start-1 row-start-2 w-max h-max flex flex-col items-center '>
-					<MeasurementsCard
-						title='Biceps'
-						userMeasurements={userMeasurements?.biceps}
-						unit={measurementsUnit}
-					/>
+					<MeasurementsCard title='Biceps' userMeasurements={userMeasurements?.biceps} unit={measurementsUnit} />
 				</div>
 				<div className='col-start-3 row-start-2 w-max h-max flex flex-col items-center '>
-					<MeasurementsCard
-						title='Chest'
-						userMeasurements={userMeasurements?.chest}
-						unit={measurementsUnit}
-					/>
+					<MeasurementsCard title='Chest' userMeasurements={userMeasurements?.chest} unit={measurementsUnit} />
 				</div>
 				<div className='col-start-3 row-start-4 w-max h-max flex flex-col items-center '>
-					<MeasurementsCard
-						title='Calves'
-						userMeasurements={userMeasurements?.calves}
-						unit={measurementsUnit}
-					/>
+					<MeasurementsCard title='Calves' userMeasurements={userMeasurements?.calves} unit={measurementsUnit} />
 				</div>
 				<div className='col-start-3 row-start-3 w-max h-max flex flex-col items-center '>
-					<MeasurementsCard
-						title='Thigh'
-						userMeasurements={userMeasurements?.thigh}
-						unit={measurementsUnit}
-					/>
+					<MeasurementsCard title='Thigh' userMeasurements={userMeasurements?.thigh} unit={measurementsUnit} />
 				</div>
 				<div className='col-start-1 row-start-4 w-max h-max flex flex-col items-center '>
-					<MeasurementsCard
-						title='Hips'
-						userMeasurements={userMeasurements?.hips}
-						unit={measurementsUnit}
-					/>
+					<MeasurementsCard title='Hips' userMeasurements={userMeasurements?.hips} unit={measurementsUnit} />
 				</div>
 				<div className='col-start-1 row-start-3 w-max h-max flex flex-col items-center '>
-					<MeasurementsCard
-						title='Belly'
-						userMeasurements={userMeasurements?.belly}
-						unit={measurementsUnit}
-					/>
+					<MeasurementsCard title='Belly' userMeasurements={userMeasurements?.belly} unit={measurementsUnit} />
 				</div>
 
 				<Image
 					src='/img-svg/img/FULL1.png'
 					alt='Posture of the man with highlighted muscels'
-					width={'300'}
-					height={'400'}
+					width={'200'}
+					height={'300'}
 					priority={true}
 					style={{ height: 'auto', width: '300' }}
 					className=' row-start-2 row-span-4 col-start-2'
 				/>
 			</div>
-
 			<div className=' flex flex-col justify-center items-center'>
 				<h2 className='font-bold text-primary-blue'>BMI</h2>
 				<BMIPanel bmi={bmiValue} />
 				<p
 					className={`${
-						bmiName === 'Underweight' ||
-						bmiName === 'Overweight' ||
-						bmiName === 'To much Mate'
+						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
 							? 'font-bold text-lg text-primary-danger'
 							: 'font-bold text-lg text-primary-success '
 					}`}>
@@ -192,9 +155,7 @@ export default function UserPage(): React.ReactElement {
 				</p>
 				<span
 					className={`${
-						bmiName === 'Underweight' ||
-						bmiName === 'Overweight' ||
-						bmiName === 'To much Mate'
+						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
 							? ' text-lg text-primary-danger'
 							: ' text-lg text-primary-success '
 					}`}>
@@ -202,10 +163,7 @@ export default function UserPage(): React.ReactElement {
 				</span>
 			</div>
 
-			<Link
-				role='button'
-				href='/userPage/measurements'
-				className='btn-light text-primary-blue m-auto flex gap-1 items-center hover:text-primary-blue'>
+			<Link role='button' href='/userPage/measurements' className='btn-light text-primary-blue m-auto flex gap-1 items-center hover:text-primary-blue'>
 				<PlusIcon /> Measurement
 			</Link>
 		</article>

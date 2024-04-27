@@ -5,18 +5,14 @@ import { auth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
 export default function TopNav() {
-	if (auth().userId) {
+	const authObject = auth();
+
+	if (authObject.userId) {
 		redirect('/userPage');
 		return (
 			<header className='flex items-center justify-between p-4 px-2 bg-primary-dark/100 sm:px-8 '>
 				<Link href='#'>
-					<Image
-						src='/img-svg/svg/logoLight.svg'
-						alt='GymBuddy4U logo'
-						width={'150'}
-						height={'150'}
-						style={{ height: 'auto', width: '100%' }}
-					/>
+					<Image src='/img-svg/svg/logoLight.svg' alt='GymBuddy4U logo' width={'150'} height={'150'} style={{ height: 'auto', width: '100%' }} />
 					<span className='sr-only'>GymBuddy4u</span>
 				</Link>
 				<Link href='/userPage' className='btn-light p-4'>
@@ -28,13 +24,7 @@ export default function TopNav() {
 		return (
 			<header className='flex items-center justify-between p-4 px-2 bg-primary-dark/100 sm:px-8 '>
 				<Link href='/userPage'>
-					<Image
-						src='/img-svg/svg/logoLight.svg'
-						alt='GymBuddy4U logo'
-						width={'150'}
-						height={'150'}
-						style={{ height: 'auto', width: '100%' }}
-					/>
+					<Image src='/img-svg/svg/logoLight.svg' alt='GymBuddy4U logo' width={'150'} height={'150'} style={{ height: 'auto', width: '100%' }} />
 					<span className='sr-only'>GymBuddy4u</span>
 				</Link>
 				<div className='flex gap-4 sm:gap-8'>

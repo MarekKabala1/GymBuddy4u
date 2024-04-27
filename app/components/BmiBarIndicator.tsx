@@ -33,7 +33,7 @@ const BMIPanel: React.FC<{ bmi: number | undefined }> = ({ bmi }) => {
 	return (
 		<div className='m-1 flex justify-center items-center relative'>
 			<div
-				className={` relative top-0 left-0 w-[230px] aspect-[2/1] rounded-[50%] box-border border-[25px] border-b-0 border-primary-blue
+				className={` relative top-0 left-0 w-[200px] aspect-[2/1] rounded-[50%] box-border border-[25px] border-b-0 border-primary-blue
 					 `}
 				//TODO:Adjust border color to BMI%
 				style={{
@@ -46,12 +46,12 @@ const BMIPanel: React.FC<{ bmi: number | undefined }> = ({ bmi }) => {
 						position: 'absolute',
 						top: '-25px',
 						left: '-25px',
-						width: '230px',
-						height: '115px',
+						width: '200px',
+						height: '100px',
 						borderRadius: '50% / 100% 100% 0 0',
-						mask: 'radial-gradient(at 50% 100%, white 55%, transparent 55.5%)',
-						maskMode: 'alpha',
-						WebkitMask: 'radial-gradient(at 50% 100%, #0000 55%, #000 55.5%)',
+						mask: 'radial-gradient(at 50% 100%, white 53%, transparent 52.5%)',
+						// maskMode: 'alpha',
+						WebkitMask: 'radial-gradient(at 50% 100%, #0000 53%, #000 52.5%)',
 						background: `conic-gradient(from 0.75turn at 50% 100%, ${barColor} calc(var(--percentage) * 1% / 2), transparent calc( var(--percentage) * 1% / 2 + 0.1%))`,
 					}}>
 					<style>
