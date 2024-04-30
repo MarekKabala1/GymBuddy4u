@@ -1,12 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-import Link from 'next/link';
-
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
-import { Workout, WorkoutRoutine } from '@/app/types/types';
+import { Workout } from '@/app/types/types';
 
 import { useToast } from '@/app/hooks/toast';
 import { ScaleLoader } from 'react-spinners';
@@ -14,7 +12,6 @@ import { ScaleLoader } from 'react-spinners';
 import AddWorkoutForm from '@/app/components/AddWorkoutForm';
 import { BackArrowIcon, PlusIcon } from '@/app/assets/svgIcons';
 import { useParams, useRouter } from 'next/navigation';
-import { useSession } from '@clerk/nextjs';
 
 export default function WeekRoutine(): React.ReactElement<Workout> {
 	const [loading, setLoading] = useState(true);
@@ -23,12 +20,11 @@ export default function WeekRoutine(): React.ReactElement<Workout> {
 	const { showErrorToast, showSuccessToast } = useToast();
 	const router = useRouter();
 	const params = useParams();
-	const routineId = params.addWorkout as string;
+	const routineId = params.addWorkout[1] as string;
+	const userId = params.addWorkout[0] as string;
 
-	const session = useSession();
-	const userId = session.session?.user?.id as string;
 	const dialog = useRef<HTMLDialogElement>(null);
-
+	//ToDo:Check why userId is undefined when i try to fetch userId from Clerk Sesion
 	const fetchWorkout = useQuery(api.workouts?.getWorkoutsForTheDay, { routineId: routineId, userId: userId });
 	const createWorkout = useMutation(api.workouts?.addWorkoutForDayRoutine);
 
@@ -36,73 +32,36 @@ export default function WeekRoutine(): React.ReactElement<Workout> {
 		if (fetchWorkout && fetchWorkout.length > 0 && userId) {
 			setDayWorkout(fetchWorkout);
 			setLoading(false);
-			// console.log(dayWorkout);
 		} else {
 			setLoading(false);
 			return;
 		}
 	}, [fetchWorkout, userId]);
 
-	// useEffect(() => {
-	// 	if (getRoutine) {
-	// 		setWeekRoutine(getRoutine);
-	// 		setLoading(false);
-	// 		weekRoutine.map((rutine) => {
-	// 			const routineId = rutine._id;
-	// 			const userId = rutine.userId;
-	// 			console.log(routineId, userId);
-	// 		});
-	// 	}
-	// }, [getRoutine]);
-	// const createWeekRoutine = useMutation(
-	// 	api.workoutsWeekRoutine.addDayForWeekRoutine
-	// );
 	const handleFormSubmit = async (data: Workout) => {
 		try {
 			setLoading(true);
-			const dataWithIds = { ...data, userId: userId, routineId: routineId };
-			await createWorkout(dataWithIds);
+			//TOdO: Check in the form why sets are a string
+			const dataWithIds = { ...data, userId: userId, routineId: routineId, sets: Number(data.sets) };
 			console.log(dataWithIds);
+			await createWorkout(dataWithIds);
+
 			dialog.current?.close();
+			setLoading(false);
 			showSuccessToast('Workout Routine created successfully');
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error('Error submitting form:', error);
+			showErrorToast('Failed to create workout Routine');
 		}
-		// try {
-		// 	setLoading(true);
-		// 	await createWeekRoutine(data as Workout);
-		// 	setLoading(false);
-		// 	console.log(data);
-		// 	showSuccessToast('Workout Routine created successfully');
-		// } catch (error) {
-		// 	console.error('Error submitting form:', error);
-		// 	showErrorToast('Failed to create workout Routine');
-		// }
 	};
 
-	// useEffect(() => {
-	// 	setLoading(true);
-	// 	if (
-	// 		getWeekRoutine === undefined ||
-	// 		getWeekRoutine === null ||
-	// 		getWeekRoutine.length === 0
-	// 	) {
-	// 		setLoading(false);
-	// 		return;
-	// 	}
-	// 	if (getWeekRoutine) {
-	// 		setWeekRoutine(getWeekRoutine);
-	// 		setLoading(false);
-	// 	}
-	// }, [getWeekRoutine]);
-
-	// if (loading) {
-	// 	return (
-	// 		<div className='flex justify-center items-center h-screen'>
-	// 			<ScaleLoader color='#36D7B7' />
-	// 		</div>
-	// 	);
-	// }
+	if (loading) {
+		return (
+			<div className='flex justify-center items-center h-screen'>
+				<ScaleLoader color='#36D7B7' />
+			</div>
+		);
+	}
 
 	return (
 		<article className='flex flex-col  w-full p-4 gap-4  overflow-auto'>
@@ -120,13 +79,17 @@ export default function WeekRoutine(): React.ReactElement<Workout> {
 				</dialog>
 
 				<div className='flex flex-col items-center w-full gap-4  overflow-auto'>
-					{dayWorkout?.map((workout) => {
+					{dayWorkout?.map(({ routineId, userId, _id, ...workout }) => {
 						return (
-							<div key={workout._id} {...workout}>
+							<div key={_id} {...workout}>
 								<h1>{workout.muscleGroup}</h1>
 								<p>{workout.name}</p>
 								<p>{workout.sets}</p>
-								<p>{workout.repsValue.map((rep) => rep.reps)}</p>
+								<p>
+									{workout.repsValue.map((reps) => (
+										<span key={_id}>{reps}</span>
+									))}
+								</p>
 							</div>
 						);
 					})}

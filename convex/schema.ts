@@ -35,9 +35,7 @@ export default defineSchema({
     routineId: v.string(),
     muscleGroup: v.string(),
     sets: v.number(),
-    repsValue: v.array(v.object({
-      reps: v.number()
-    })),
+    repsValue: v.array(v.number()),
   }).index("by_routineId", ["routineId"])
 
 })

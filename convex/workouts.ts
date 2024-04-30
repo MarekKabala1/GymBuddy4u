@@ -39,10 +39,7 @@ export const addWorkoutForDayRoutine = mutation({
     routineId: v.string(),
     muscleGroup: v.string(),
     sets: v.number(),
-    repsValue: v.array(v.object({
-      reps: v.number()
-    },
-    )),
+    repsValue: v.array(v.number()),
   },
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);

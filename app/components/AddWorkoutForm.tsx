@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { memo } from 'react';
 
 import { Workout } from '../types/types';
 
@@ -19,20 +18,20 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) =>
 	} = useForm<Workout>();
 
 	const onSubmitHandler: SubmitHandler<Workout> = (data: Workout) => {
-		const originalRepsValue = [...data.repsValue];
+		let originalRepsValue = [...data.repsValue];
 
-		data.repsValue = repsValue as number[];
-		data.sets = sets;
-		setRepsValue(originalRepsValue);
-		onSubmit({ ...data, repsValue: repsValue as number[], sets });
-		reset({
+		originalRepsValue = data.repsValue.map((value) => Number(value));
+		const updatedData: Workout = {
 			...data,
-			repsValue: originalRepsValue,
-		});
+			repsValue: originalRepsValue.slice(0, data.sets),
+			sets: data.sets as number,
+		};
+
+		onSubmit({ ...(updatedData as Workout) });
+		reset(data);
 	};
 
 	const [sets, setSets] = useState(1);
-	// const [repsValue, setRepsValue] = useState<Array<{ reps: number }>>(Array.from({ length: sets }, () => ({ reps: 1 })));
 	const [repsValue, setRepsValue] = useState<Array<number>>();
 	const maxSets = 10;
 
@@ -58,11 +57,13 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) =>
 		const newReps = e.target.valueAsNumber;
 		setRepsValue((prevReps) => {
 			if (prevReps) {
-				const newRepsValue = prevReps.slice(); // Create a shallow copy of the previous array
-				newRepsValue.fill(newReps, index, index + 1); // Fill the new value at the specified index
+				// Create a copy of the previous array
+				const newRepsValue = prevReps.slice();
+				// Fill the new value at the specified index
+				newRepsValue.fill(newReps, index, index + 1);
 				return newRepsValue;
 			} else {
-				return prevReps; // Return undefined if prevReps is undefined
+				return prevReps;
 			}
 		});
 	};
@@ -127,11 +128,11 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) =>
 					))}
 					{errors.sets && <span>{errors.sets.message}</span>}
 				</div>
+				<input className='btn-light hover:text-primary-blue' type='submit' />
 				<div className='flex  justify-end gap-4 w-full'>
 					<button onClick={() => onCloseDialog()} className='btn-danger'>
 						Close
 					</button>
-					<input className='btn-light hover:text-primary-blue' type='submit' />
 				</div>
 			</form>
 			<p className='text-xs text-primary-danger text-center w-full'>
