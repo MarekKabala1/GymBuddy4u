@@ -8,7 +8,9 @@ interface WorkoutFormProps {
 	onSubmit: SubmitHandler<Workout>;
 	onCloseDialog: () => void;
 }
-
+//TODO: add error handling to the form
+//TODO: add loading state to the form
+//TODO: add validation to the form
 const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) => {
 	const {
 		register,

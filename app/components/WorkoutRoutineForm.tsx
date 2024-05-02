@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useSession } from '@clerk/nextjs';
 
@@ -25,8 +25,6 @@ interface WorkoutRoutineFormProps {
 
 const weekDay = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const routineId = crypto.randomBytes(16).toString('hex');
-
 const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onCloseDialog, weekRoutineDays, dataToEdit, isEditing }) => {
 	const [day, setDay] = useState<string>();
 	const [restDay, setRestDay] = useState(false);
@@ -51,9 +49,19 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 	};
 
 	const onSubmitHandler = (data: WorkoutRoutine) => {
+		const routineId = crypto.randomBytes(16).toString('hex');
+		//error handling
+		if (errors) {
+			Object.keys(errors).forEach((key) => {
+				const fieldKey = key as keyof WorkoutRoutine;
+				const errorMessage = errors[fieldKey as keyof WorkoutRoutine]?.message as string;
+				setFieldError(fieldKey, errorMessage);
+			});
+			setDisplayError(true);
+		}
+
 		if (isEditing && editData) {
 			data.name = data.name?.split(' ').map(toCapitalCase(data.name)).join(' ');
-
 			const updatedRoutine = { ...data, routineId: editData.routineId, userId: editData.userId };
 			onSubmit(updatedRoutine);
 			reset(data);
@@ -65,7 +73,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 				setError('day', { type: 'manual', message: 'Day already exists' });
 				setDisplayError(true);
 			} else {
-				clearErrors('day');
+				clearErrors();
 				setDisplayError(false);
 				// Submit the data if the day is unique
 				const createRoutine = { ...data, restDay, routineId, userId };
@@ -97,17 +105,43 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 	useEffect(() => {
 		setDay(getTheDay());
 	}, []);
+	const setFieldError = useCallback(
+		(field: keyof typeof errors, message: string) => {
+			if (message) {
+				setError(field, { type: 'manual', message });
+			} else {
+				setError(field, { type: 'manual', message: '' });
+			}
+		},
+		[setError]
+	);
 
 	useEffect(() => {
-		if (isEditing && editData) {
-			setDisplayError(false);
-		} else {
-			setDisplayError(!!errors.day || !!errors.name);
+		console.log('effect is running');
+		if (errors && Object.keys(errors).length > 0) {
+			Object.keys(errors).forEach((key) => {
+				const fieldKey = key as keyof WorkoutRoutine;
+				setFieldError(fieldKey, errors[fieldKey]?.message || '');
+			});
+			setDisplayError(true);
+			console.log(errors);
 			setTimeout(() => {
 				setDisplayError(false);
+				clearErrors();
 			}, 3000);
 		}
-	}, [editData, errors.day, errors.name, isEditing]);
+	}, [clearErrors, errors, setFieldError]);
+
+	// useEffect(() => {
+	// 	if (isEditing && editData) {
+	// 		setDisplayError(false);
+	// 	} else {
+	// 		setDisplayError(!!errors.day || !!errors.name);
+	// 		setTimeout(() => {
+	// 			setDisplayError(false);
+	// 		}, 3000);
+	// 	}
+	// }, [editData, errors.day, errors.name, isEditing]);
 
 	return (
 		<form className='flex flex-col gap-4 items-end justify-center' onSubmit={handleSubmit(onSubmitHandler)}>

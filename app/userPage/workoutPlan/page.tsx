@@ -1,14 +1,13 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import { useQuery, useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { api } from '@/convex/_generated/api';
 
-import { Workout, WorkoutRoutine } from '@/app/types/types';
+import { WorkoutRoutine } from '@/app/types/types';
 
-import WorkoutForm from '@/app/components/AddWorkoutForm';
 import WorkoutRoutineForm from '@/app/components/WorkoutRoutineForm';
 
 import { EditIcon, PlusIcon, SubMenuIcon, TrashIcon } from '@/app/assets/svgIcons';
@@ -17,7 +16,6 @@ import { Toaster } from 'react-hot-toast';
 import { useToast } from '@/app/hooks/toast';
 
 import { ScaleLoader } from 'react-spinners';
-import { revalidatePath } from 'next/cache';
 
 export default function Workoutt(): React.ReactElement {
 	const [loading, setLoading] = useState(true);
@@ -61,20 +59,23 @@ export default function Workoutt(): React.ReactElement {
 	};
 
 	//close tolpit when click outside
-	const handleClickOutsideToClosePopUp = (event: MouseEvent) => {
-		const target = event.target as HTMLElement;
+	const handleClickOutsideToClosePopUp = useCallback(
+		(event: MouseEvent) => {
+			const target = event.target as HTMLElement;
 
-		if (openMenuId && !target.closest(`[data-menu-id="${openMenuId}"]`)) {
-			setOpenMenuId(null);
-		}
-	};
+			if (openMenuId && !target.closest(`[data-menu-id="${openMenuId}"]`)) {
+				setOpenMenuId(null);
+			}
+		},
+		[openMenuId]
+	);
 	useEffect(() => {
 		document.body.addEventListener('click', handleClickOutsideToClosePopUp);
 
 		return () => {
 			document.body.removeEventListener('click', handleClickOutsideToClosePopUp);
 		};
-	}, [openMenuId]);
+	}, [handleClickOutsideToClosePopUp, openMenuId]);
 
 	//sort by week day  fetched data
 	const sortedWeekRoutine = <T extends { day: string }>(data: T[]): T[] => {

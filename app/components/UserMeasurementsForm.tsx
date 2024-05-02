@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { UserMeasurements } from '../types/types';
 import { useSession } from '@clerk/nextjs';
@@ -14,7 +14,9 @@ const UserMeasurementsForm: React.FC<UserMeasurementsFormProps> = ({ onSubmit })
 	const onSubmitWithUserId = (data: UserMeasurements) => {
 		if (errors) {
 			Object.keys(errors).forEach((key) => {
-				setError(key as keyof typeof errors, { type: 'manual' });
+				const fieldKey = key as keyof UserMeasurements;
+				const errorMessage = errors[fieldKey as keyof UserMeasurements]?.message as string;
+				setFieldError(fieldKey, errorMessage);
 			});
 			setDisplayError(true);
 		}
@@ -32,25 +34,32 @@ const UserMeasurementsForm: React.FC<UserMeasurementsFormProps> = ({ onSubmit })
 		formState: { errors },
 	} = useForm<UserMeasurements>();
 
+	const setFieldError = useCallback(
+		(field: keyof typeof errors, message: string) => {
+			if (message) {
+				setError(field, { type: 'manual', message });
+			} else {
+				setError(field, { type: 'manual', message: '' });
+			}
+		},
+		[setError]
+	);
+
 	useEffect(() => {
-		if (
-			errors.age ||
-			errors.height ||
-			errors.weight ||
-			errors.biceps ||
-			errors.chest ||
-			errors.calves ||
-			errors.thigh ||
-			errors.hips ||
-			errors.belly ||
-			errors.unit
-		) {
+		console.log('useEffect is running');
+		if (errors && Object.keys(errors).length > 0) {
+			Object.keys(errors).forEach((key) => {
+				const fieldKey = key as keyof UserMeasurements;
+				setFieldError(fieldKey, errors[fieldKey]?.message || '');
+			});
 			setDisplayError(true);
+			console.log(errors);
 			setTimeout(() => {
 				setDisplayError(false);
+				clearErrors();
 			}, 3000);
 		}
-	}, [errors.age, errors.belly, errors.biceps, errors.calves, errors.chest, errors.height, errors.hips, errors.thigh, errors.unit, errors.weight]);
+	}, [clearErrors, errors, setFieldError]);
 
 	return (
 		<>
