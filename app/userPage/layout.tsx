@@ -1,6 +1,6 @@
-import SideNav from '../components/SiedeNav';
+import SideNav from '@/components/SiedeNav';
 
-export default function UserPageLayout({ children }: { children: React.ReactNode }) {
+export default async function UserPageLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<main className=' flex min-h-dvh  flex-col  md:flex-row md:min-h-dvh'>
 			<aside className=''>

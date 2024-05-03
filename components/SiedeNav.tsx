@@ -17,7 +17,7 @@ import {
 	CameraIcon,
 	AwardIcon,
 	LogOut,
-} from '../assets/svgIcons';
+} from '../app/assets/svgIcons';
 
 interface NavLinkProps {
 	href: string;

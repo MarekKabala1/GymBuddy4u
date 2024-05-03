@@ -9,7 +9,7 @@ import { Workout } from '@/app/types/types';
 import { useToast } from '@/app/hooks/toast';
 import { ScaleLoader } from 'react-spinners';
 
-import AddWorkoutForm from '@/app/components/AddWorkoutForm';
+import AddWorkoutForm from '@/components/AddWorkoutForm';
 import { BackArrowIcon, PlusIcon } from '@/app/assets/svgIcons';
 import { useParams, useRouter } from 'next/navigation';
 

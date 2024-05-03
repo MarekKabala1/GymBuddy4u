@@ -8,7 +8,7 @@ import { api } from '@/convex/_generated/api';
 
 import { WorkoutRoutine } from '@/app/types/types';
 
-import WorkoutRoutineForm from '@/app/components/WorkoutRoutineForm';
+import WorkoutRoutineForm from '@/components/WorkoutRoutineForm';
 
 import { EditIcon, PlusIcon, SubMenuIcon, TrashIcon } from '@/app/assets/svgIcons';
 

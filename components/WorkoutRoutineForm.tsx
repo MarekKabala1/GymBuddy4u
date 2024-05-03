@@ -5,9 +5,9 @@ import { useSession } from '@clerk/nextjs';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { WorkoutRoutine } from '../types/types';
+import { WorkoutRoutine } from '../app/types/types';
 
-import { PlusIcon } from '../assets/svgIcons';
+import { PlusIcon } from '../app/assets/svgIcons';
 
 import crypto from 'crypto';
 
