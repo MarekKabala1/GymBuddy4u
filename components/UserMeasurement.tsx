@@ -4,30 +4,34 @@ import { Preloaded, useMutation, usePreloadedQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import MeasurementsCard from '@/components/MeasurementCard';
-import UserMeasurementsForm from '@/components/UserMeasurementsForm';
+import UserMeasurementsForm from '@/components/AddMeasurementsForm';
 import type { UserMeasurements } from '@/app/types/types';
 import { TrashIcon } from '@/app/assets/svgIcons';
-import { useToast } from '@/app/hooks/toast';
+import { useToast } from '@/app/hooks/useToast';
 import { ScaleLoader } from 'react-spinners';
 import { formatDistance } from 'date-fns';
 import { Toaster } from 'react-hot-toast';
+import useLoading from '@/app/hooks/useLoading';
 
 export function UserMeasurements(props: { userMeasurements: Preloaded<typeof api.measurements.getAllMesurmentsForUser> }) {
 	const [lastThreeUserMeasurements, setLastThreeUserMeasurements] = useState<UserMeasurements[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useLoading();
 	const { showErrorToast, showSuccessToast } = useToast();
+
+	const excludedKeysForMeasurementCard = ['_id', 'unit', '_creationTime', 'userId', 'height'];
+
 	const userMeasurements = usePreloadedQuery(props.userMeasurements);
 	const deleteMeasurement = useMutation(api.measurements.deleteUserMeasurement);
 	const createMeasurement = useMutation(api.measurements.createUserMeasurement);
 
 	const handleFormSubmit = async (data: UserMeasurements) => {
 		try {
-			setLoading(true);
+			setLoading({ type: 'SET_LOADING', payload: true });
 			const numericData = Object.fromEntries(
 				Object.entries(data).map(([key, value]) => (key === 'userId' || key === 'unit' ? [key, value] : [key, parseFloat(value)]))
 			);
 			await createMeasurement(numericData as UserMeasurements);
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 			showSuccessToast('Measurement added successfully');
 		} catch (error) {
 			console.error('Error submitting form:', error);
@@ -36,17 +40,17 @@ export function UserMeasurements(props: { userMeasurements: Preloaded<typeof api
 	};
 
 	useEffect(() => {
-		setLoading(true);
+		setLoading({ type: 'SET_LOADING', payload: true });
 		if (userMeasurements === null) {
 			setLastThreeUserMeasurements([]);
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 		} else {
 			const sortedMeasurements = [...userMeasurements].sort((a, b) => (b._creationTime ?? 0) - (a._creationTime ?? 0));
 			const lastThreeMeasurements = sortedMeasurements.slice(0, 3);
 			setLastThreeUserMeasurements(lastThreeMeasurements);
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 		}
-	}, [userMeasurements]);
+	}, [setLoading, userMeasurements]);
 
 	if (loading) {
 		return (
@@ -70,12 +74,17 @@ export function UserMeasurements(props: { userMeasurements: Preloaded<typeof api
 							})}
 						</h2>
 						<div>
-							<MeasurementsCard title='Biceps' userMeasurements={measurement.biceps} unit='cm' />
-							<MeasurementsCard title='Chest' userMeasurements={measurement.chest} unit='cm' />
-							<MeasurementsCard title='Calves' userMeasurements={measurement.calves} unit='cm' />
-							<MeasurementsCard title='Thigh' userMeasurements={measurement.thigh} unit='cm' />
-							<MeasurementsCard title='Hips' userMeasurements={measurement.hips} unit='cm' />
-							<MeasurementsCard title='Belly' userMeasurements={measurement.belly} unit='cm' />
+							{Object.entries(measurement).map(
+								([key, value]) =>
+									!excludedKeysForMeasurementCard.includes(key) && (
+										<MeasurementsCard
+											key={key}
+											title={key}
+											userMeasurements={value}
+											unit={key === 'weight' && measurement.unit === 'metric' ? 'kg' : measurement.unit === 'metric' ? 'cm' : 'in'}
+										/>
+									)
+							)}
 						</div>
 						<button
 							className='btn-danger z-50 flex justify-center items-center gap-1  sm:right-24 md:right-10 '

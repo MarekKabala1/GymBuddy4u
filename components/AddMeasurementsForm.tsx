@@ -46,7 +46,6 @@ const UserMeasurementsForm: React.FC<UserMeasurementsFormProps> = ({ onSubmit })
 	);
 
 	useEffect(() => {
-		console.log('useEffect is running');
 		if (errors && Object.keys(errors).length > 0) {
 			Object.keys(errors).forEach((key) => {
 				const fieldKey = key as keyof UserMeasurements;

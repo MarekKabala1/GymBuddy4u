@@ -13,10 +13,11 @@ import MeasurementsCard from './MeasurementCard';
 import { UserMeasurements } from '../app/types/types';
 import { PlusIcon } from '../app/assets/svgIcons';
 import BMIPanel from './BmiBarIndicator';
+import useLoading from '@/app/hooks/useLoading';
 
 export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.measurements.getLastMeasurementForUser> }) {
 	const [userMeasurements, setUserMeasurements] = useState<UserMeasurements>();
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useLoading();
 	const [bmiName, setBmiName] = useState<string>();
 	const [bmiValue, setBmiValue] = useState<number>();
 
@@ -24,17 +25,17 @@ export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.meas
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				setLoading(true);
+				setLoading({ type: 'SET_LOADING', payload: true });
 				setUserMeasurements(lastMeasurement as UserMeasurements);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			} finally {
-				setLoading(false);
+				setLoading({ type: 'SET_LOADING', payload: false });
 			}
 		};
 
 		fetchData();
-	}, [lastMeasurement]);
+	}, [lastMeasurement, setLoading]);
 
 	const measurementsUnit = userMeasurements?.unit === 'metric' ? 'cm' : 'in';
 
@@ -146,16 +147,16 @@ export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.meas
 				<p
 					className={`${
 						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
-							? 'font-bold text-lg text-primary-danger'
-							: 'font-bold text-lg text-primary-success '
+							? 'font-bold text-lg text-primary-success '
+							: 'font-bold text-lg text-primary-danger'
 					}`}>
 					{bmiValue}
 				</p>
 				<span
 					className={`${
 						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
-							? ' text-lg text-primary-danger'
-							: ' text-lg text-primary-success '
+							? ' text-lg text-primary-success '
+							: ' text-lg text-primary-danger'
 					}`}>
 					{bmiName}
 				</span>

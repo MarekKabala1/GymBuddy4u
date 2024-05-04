@@ -6,15 +6,16 @@ import { api } from '@/convex/_generated/api';
 
 import { Workout } from '@/app/types/types';
 
-import { useToast } from '@/app/hooks/toast';
+import { useToast } from '@/app/hooks/useToast';
 import { ScaleLoader } from 'react-spinners';
 
 import AddWorkoutForm from '@/components/AddWorkoutForm';
 import { BackArrowIcon, PlusIcon } from '@/app/assets/svgIcons';
 import { useParams, useRouter } from 'next/navigation';
+import useLoading from '@/app/hooks/useLoading';
 
 export default function WeekRoutine(): React.ReactElement<Workout> {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useLoading();
 	const [dayWorkout, setDayWorkout] = useState<Workout[]>([]);
 
 	const { showErrorToast, showSuccessToast } = useToast();
@@ -31,23 +32,23 @@ export default function WeekRoutine(): React.ReactElement<Workout> {
 	useEffect(() => {
 		if (fetchWorkout && fetchWorkout.length > 0 && userId) {
 			setDayWorkout(fetchWorkout);
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 		} else {
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 			return;
 		}
-	}, [fetchWorkout, userId]);
+	}, [fetchWorkout, userId, setLoading]);
 
 	const handleFormSubmit = async (data: Workout) => {
 		try {
-			setLoading(true);
+			setLoading({ type: 'SET_LOADING', payload: true });
 			//TOdO: Check in the form why sets are a string
 			const dataWithIds = { ...data, userId: userId, routineId: routineId, sets: Number(data.sets) };
 			console.log(dataWithIds);
 			await createWorkout(dataWithIds);
 
 			dialog.current?.close();
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 			showSuccessToast('Workout Routine created successfully');
 		} catch (error) {
 			console.error('Error submitting form:', error);

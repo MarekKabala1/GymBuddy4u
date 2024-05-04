@@ -8,17 +8,18 @@ import { api } from '@/convex/_generated/api';
 
 import { WorkoutRoutine } from '@/app/types/types';
 
-import WorkoutRoutineForm from '@/components/WorkoutRoutineForm';
+import WorkoutRoutineForm from '@/components/AddWorkoutRoutineForm';
 
 import { EditIcon, PlusIcon, SubMenuIcon, TrashIcon } from '@/app/assets/svgIcons';
 
 import { Toaster } from 'react-hot-toast';
-import { useToast } from '@/app/hooks/toast';
+import { useToast } from '@/app/hooks/useToast';
 
 import { ScaleLoader } from 'react-spinners';
+import useLoading from '@/app/hooks/useLoading';
 
 export default function Workoutt(): React.ReactElement {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useLoading();
 	const [showModal, setShowModal] = useState(false);
 	const [openMenuId, setOpenMenuId] = useState<Id<'workoutsWeekRoutine'> | undefined | null>(null);
 	const [activeIndex, setActiveIndex] = useState<number | null>(0);
@@ -42,10 +43,10 @@ export default function Workoutt(): React.ReactElement {
 	const handleFormSubmit = async (data: WorkoutRoutine) => {
 		try {
 			showSuccessToast('Workout Routine created successfully');
-			setLoading(true);
+			setLoading({ type: 'SET_LOADING', payload: true });
 			await createWeekRoutine(data as WorkoutRoutine);
 			dialog.current?.close();
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 		} catch (error) {
 			showErrorToast('Failed to create workout Routine');
 		}
@@ -89,19 +90,19 @@ export default function Workoutt(): React.ReactElement {
 	};
 
 	useEffect(() => {
-		setLoading(true);
+		setLoading({ type: 'SET_LOADING', payload: true });
 		if (getWeekRoutine === undefined || getWeekRoutine === null || getWeekRoutine.length === 0) {
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 			return;
 		}
 		if (getWeekRoutine) {
 			setWeekRoutine(sortedWeekRoutine(getWeekRoutine));
 			setWeekDays(getWeekRoutine.map((item) => item.day));
 
-			setLoading(false);
+			setLoading({ type: 'SET_LOADING', payload: false });
 		}
 		// console.log(editedRoutine);
-	}, [editedRoutine, getWeekRoutine]);
+	}, [editedRoutine, getWeekRoutine, setLoading]);
 
 	///edit routine
 	const handleEdit = (id: Id<'workoutsWeekRoutine'>) => {
