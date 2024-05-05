@@ -86,7 +86,7 @@ export default function SideNav(): React.ReactElement {
 				<NavLink href='/userPage/achievements' label='Achievements' icon={AwardIcon} closeSideNav={closeSideNav} />
 				<div className='flex items-center gap-3 px-4 pt-12 pointer-events-auto'>
 					<LogOut />
-					<SignOutButton>Log Out</SignOutButton>
+					<SignOutButton redirectUrl='/'>Log Out</SignOutButton>
 				</div>
 			</nav>
 		</>

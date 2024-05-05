@@ -132,7 +132,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) =>
 				</div>
 				<input className='btn-light hover:text-primary-blue' type='submit' />
 				<div className='flex  justify-end gap-4 w-full'>
-					<button onClick={() => onCloseDialog()} className='btn-danger'>
+					<button onClick={onCloseDialog} className='btn-danger'>
 						Close
 					</button>
 				</div>

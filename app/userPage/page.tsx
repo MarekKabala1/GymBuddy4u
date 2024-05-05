@@ -8,6 +8,7 @@ export default async function UserPage() {
 		console.error('API method is undefined');
 		return;
 	}
+
 	const getLastMeasurement = await preloadQuery(api.measurements?.getLastMeasurementForUser, {});
 
 	return (

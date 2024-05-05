@@ -1,7 +1,7 @@
 import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import Image from 'next/image';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
 export default function TopNav() {
@@ -28,10 +28,10 @@ export default function TopNav() {
 					<span className='sr-only'>GymBuddy4u</span>
 				</Link>
 				<div className='flex gap-4 sm:gap-8'>
-					<SignInButton afterSignInUrl='/userPage' mode='modal'>
+					<SignInButton forceRedirectUrl={'/userPage'} mode='modal'>
 						<button className='btn-light'>Log In</button>
 					</SignInButton>
-					<SignUpButton afterSignInUrl='/userPage' mode='modal'>
+					<SignUpButton forceRedirectUrl={'/userPage'} mode='modal'>
 						<button className='btn-dark'>Register</button>
 					</SignUpButton>
 				</div>

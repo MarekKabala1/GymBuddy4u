@@ -99,7 +99,6 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 			setDay(undefined);
 			setRestDay(false);
 		}
-		console.log(isEditing, dataToEdit);
 	}, [isEditing, dataToEdit]);
 
 	useEffect(() => {
@@ -117,7 +116,6 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 	);
 
 	useEffect(() => {
-		console.log('effect is running');
 		if (errors && Object.keys(errors).length > 0) {
 			Object.keys(errors).forEach((key) => {
 				const fieldKey = key as keyof WorkoutRoutine;
@@ -131,17 +129,6 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 			}, 3000);
 		}
 	}, [clearErrors, errors, setFieldError]);
-
-	// useEffect(() => {
-	// 	if (isEditing && editData) {
-	// 		setDisplayError(false);
-	// 	} else {
-	// 		setDisplayError(!!errors.day || !!errors.name);
-	// 		setTimeout(() => {
-	// 			setDisplayError(false);
-	// 		}, 3000);
-	// 	}
-	// }, [editData, errors.day, errors.name, isEditing]);
 
 	return (
 		<form className='flex flex-col gap-4 items-end justify-center' onSubmit={handleSubmit(onSubmitHandler)}>
@@ -208,7 +195,7 @@ const WorkoutRoutineForm: React.FC<WorkoutRoutineFormProps> = ({ onSubmit, onClo
 				/>
 			</div>
 			<div className='flex justify-end gap-4 w-full '>
-				<button onClick={() => onCloseDialog()} className='btn-danger'>
+				<button onClick={onCloseDialog} className='btn-danger'>
 					Close
 				</button>
 				<button className='btn-light flex justify-center items-center gap-1' type='submit'>
