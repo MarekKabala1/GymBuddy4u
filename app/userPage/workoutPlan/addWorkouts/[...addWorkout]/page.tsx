@@ -15,5 +15,9 @@ export default async function AddWorkout() {
 		userId: userId || '',
 	});
 
-	return <AddUserWorkout getUserWorkoutForTheDay={getUserWorkoutForTheDay} />;
+	return (
+		<article className='flex flex-col  w-full p-4 gap-4  overflow-auto'>
+			<AddUserWorkout getUserWorkoutForTheDay={getUserWorkoutForTheDay} />
+		</article>
+	);
 }

@@ -1,19 +1,22 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 
-import { Preloaded, useMutation, usePreloadedQuery, useQuery } from 'convex/react';
+import { Preloaded, useMutation, usePreloadedQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
-import { Workout } from '@/app/types/types';
+import AddWorkoutForm from '@/components/AddWorkoutForm';
 
-import { useToast } from '@/app/hooks/useToast';
+import { useSession } from '@clerk/nextjs';
+
 import { ScaleLoader } from 'react-spinners';
 
-import AddWorkoutForm from '@/components/AddWorkoutForm';
-import { BackArrowIcon, PlusIcon } from '@/app/assets/svgIcons';
-import { useParams, useRouter } from 'next/navigation';
+import { useToast } from '@/app/hooks/useToast';
 import useLoading from '@/app/hooks/useLoading';
-import { useSession } from '@clerk/nextjs';
+import { Workout } from '@/app/types/types';
+
+import { BackArrowIcon, PlusIcon, TrashIcon } from '@/app/assets/svgIcons';
+import { Id } from '@/convex/_generated/dataModel';
 
 export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preloaded<typeof api.workouts.getWorkoutsForTheDay> }) {
 	const [loading, setLoading] = useLoading();
@@ -30,6 +33,7 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 	const dialog = useRef<HTMLDialogElement>(null);
 	const fetchWorkout = usePreloadedQuery(props.getUserWorkoutForTheDay);
 	const createWorkout = useMutation(api.workouts?.addWorkoutForDayRoutine);
+	const deleteWorkout = useMutation(api.workouts.deleteWorkout);
 
 	useEffect(() => {
 		if (fetchWorkout && fetchWorkout.length > 0) {
@@ -67,12 +71,12 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 	}
 
 	return (
-		<article className='flex flex-col  w-full p-4 gap-4  overflow-auto'>
+		<>
 			<button className='flex gap-1 items-center' onClick={router.back}>
 				<BackArrowIcon className='w-5 h-5 inline-block' />
 				<p className='text-xs'>Go Back</p>
 			</button>
-			<div className='flex flex-col items-center w-full  gap-4  overflow-auto'>
+			<div className='flex flex-col items-center w-full  gap-8  overflow-auto'>
 				<button className='btn-dark' type='button' onClick={() => dialog.current?.showModal()}>
 					<PlusIcon className='w-5 h-5 inline-block mr-1' />
 					Add Workout
@@ -81,26 +85,36 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 					<AddWorkoutForm onSubmit={handleFormSubmit} onCloseDialog={() => dialog.current?.close()} />
 				</dialog>
 
-				<div className='flex flex-col items-center w-full gap-4  overflow-auto'>
+				<div className='flex flex-col items-center w-full overflow-auto gap-1 '>
+					<div className='flex items-start flex-1 w-full px-4 justify-between text-xs'>
+						<p className='w-1/3'>Name</p>
+						<p className='w-1/6'>Group</p>
+						<p className='w-1/6 max-w-[45.5px]'>Sets</p>
+						<p className='w-1/7 min-w-[55px]'>Reps</p>
+						<p className='w-5 h-5'></p>
+					</div>
 					{dayWorkout?.map(({ routineId, userId, _id, ...workout }) => {
 						return (
-							<div key={_id} {...workout}>
-								<h1>{workout.muscleGroup}</h1>
-								<p>{workout.name}</p>
-								<p>Sets:&nbsp;{workout.sets}</p>
+							<div className='flex items-center flex-1 w-full px-4 justify-between  border border-primary-dark rounded-[5px] bg-primary-dark' key={_id}>
+								<p className='w-1/3'>{workout.name}</p>
+								<h3 className='w-1/6'>{workout.muscleGroup}</h3>
+								<p className='w-1/7'>Sets:&nbsp;{workout.sets}</p>
 								<p>
 									{workout.repsValue.map((reps, index) => (
-										<div className='flex gap-2' key={index}>
+										<div className='flex gap-2 w-1/4' key={index}>
 											<p>Rep&nbsp;{index + 1}:</p>
 											<p>{reps}</p>
 										</div>
 									))}
 								</p>
+								<button onClick={() => deleteWorkout({ workoutId: _id as Id<'workouts'> })} disabled={loading}>
+									<TrashIcon className='w-5 h-5 inline-block' />
+								</button>
 							</div>
 						);
 					})}
 				</div>
 			</div>
-		</article>
+		</>
 	);
 }

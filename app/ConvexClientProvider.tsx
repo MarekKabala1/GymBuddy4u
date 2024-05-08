@@ -18,10 +18,7 @@ const AFTER_SIGN_UP_URL = '/userPage';
 
 export function Providers({ children }: PropsWithChildren) {
 	return (
-		<ClerkProvider
-			publishableKey={clerkPublishableKey}
-			afterSignInUrl={AFTER_SIGN_IN_URL}
-			afterSignUpUrl={AFTER_SIGN_UP_URL}>
+		<ClerkProvider publishableKey={clerkPublishableKey} afterSignInUrl={AFTER_SIGN_IN_URL} afterSignUpUrl={AFTER_SIGN_UP_URL}>
 			<ConvexProviderWithClerk client={convex} useAuth={useAuth}>
 				{children}
 			</ConvexProviderWithClerk>

@@ -14,11 +14,11 @@ body{
 }
 :root {
   --primary-rgba: 7, 14, 33;
-  --secondary-rgba: 225, 229, 230;
+  --secondary-rgba: 182, 182, 187;
   --text-blue-rgb: 54, 215, 183;
   --danger-rgb: 255, 0, 0 ;
   --success-rgb : 0, 255, 0;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 155, 255, 255;
 
 }
 
@@ -33,7 +33,7 @@ button{
   @apply hover:text-primary-blue
 }
 .btn-dark {
-  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer;
+  @apply border-2 border-solid rounded-lg border-primary-light  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer;
 }
 .btn-light {
   @apply border-2 border-solid  rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm cursor-pointer;
@@ -64,6 +64,12 @@ dialog{
 }
 ::backdrop{
   @apply bg-black opacity-80
+}
+td{
+  @apply p-4 rounded-md border border-primary-dark bg-primary-dark
+}
+tbody{
+  @apply mb-8 border-separate
 }
 .progressBar::before{
     content: "";

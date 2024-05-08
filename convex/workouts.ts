@@ -70,6 +70,7 @@ export const getWorkoutsForTheDay = query({
     return await ctx.db
       .query("workouts")
       .filter((q) => q.eq(q.field("routineId"), args.routineId))
+      .order("desc")
       .collect();
   },
 })
@@ -112,6 +113,25 @@ export const getAllWeekRoutines = query({
       .filter((q) => q.eq(q.field("userId"), userId))
       .order("desc")
       .collect();
+  },
+});
+
+export const deleteWorkout = mutation({
+  args: { workoutId: v.id('workouts') },
+  async handler(ctx, args) {
+    const user = await getUserId(ctx);
+    if (!user) {
+      console.warn("No User found");
+      return;
+    }
+    const workout = await ctx.db.get(args.workoutId);
+    if (!workout) {
+      console.warn("can't find user, does not exist");
+      return "User workout not found";
+    } else {
+      await ctx.db.delete(workout._id);
+      return "User workout deleted";
+    }
   },
 });
 

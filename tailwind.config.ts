@@ -25,6 +25,7 @@ const config: Config = {
         sans: ['ui-sans-serif', 'system-ui'],
         calligraphic: ['var(--font-irishGrove)']
       },
+
     },
   },
   plugins: [],
