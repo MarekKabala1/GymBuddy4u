@@ -62,6 +62,17 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 		}
 	};
 
+	const handleWorkoutDelete = async (_id: Id<'workouts'>) => {
+		try {
+			await deleteWorkout({
+				workoutId: _id as Id<'workouts'>,
+			});
+			showSuccessToast('Workout Routine deleted successfully');
+		} catch (error) {
+			showErrorToast('Failed to delete workout Routine');
+		}
+	};
+
 	if (loading) {
 		return (
 			<div className='flex justify-center items-center h-screen'>
@@ -95,19 +106,19 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 					</div>
 					{dayWorkout?.map(({ routineId, userId, _id, ...workout }) => {
 						return (
-							<div className='flex items-center flex-1 w-full px-4 justify-between  border border-primary-dark rounded-[5px] bg-primary-dark' key={_id}>
-								<p className='w-1/3'>{workout.name}</p>
-								<h3 className='w-1/6'>{workout.muscleGroup}</h3>
-								<p className='w-1/7'>Sets:&nbsp;{workout.sets}</p>
+							<div className='flex items-center flex-1 w-full px-4 py-2 justify-between  border border-primary-dark rounded-[5px] bg-primary-dark' key={_id}>
+								<p className='w-1/3 text-xs sm:text-base'>{workout.name}</p>
+								<h3 className='w-1/6 text-xs sm:text-base'>{workout.muscleGroup}</h3>
+								<p className='w-1/7 text-xs sm:text-base'>Sets:&nbsp;{workout.sets}</p>
 								<p>
 									{workout.repsValue.map((reps, index) => (
-										<div className='flex gap-2 w-1/4' key={index}>
+										<div className='flex gap-2 w-1/4 text-xs sm:text-base' key={index}>
 											<p>Rep&nbsp;{index + 1}:</p>
 											<p>{reps}</p>
 										</div>
 									))}
 								</p>
-								<button onClick={() => deleteWorkout({ workoutId: _id as Id<'workouts'> })} disabled={loading}>
+								<button onClick={() => handleWorkoutDelete(_id as Id<'workouts'>)} disabled={loading}>
 									<TrashIcon className='w-5 h-5 inline-block' />
 								</button>
 							</div>
