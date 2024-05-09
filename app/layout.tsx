@@ -21,15 +21,10 @@ export const metadata: Metadata = {
 	],
 };
 
-export default async function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en'>
-			<body
-				className={`${IrishGrove.variable} font-sans m-auto max-h-dvh bg-primary-dark text-primary-light`}>
+			<body className={`${IrishGrove.variable} font-sans m-auto max-h-dvh bg-primary-dark text-primary-light`}>
 				<Providers>{children}</Providers>
 			</body>
 		</html>

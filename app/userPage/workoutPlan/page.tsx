@@ -1,6 +1,7 @@
-import UserWorkout from '@/components/UserWorkout';
-import { api } from '@/convex/_generated/api';
 import { preloadQuery } from 'convex/nextjs';
+import { api } from '@/convex/_generated/api';
+
+import UserWorkout from './UserWorkout';
 
 export default async function Workout() {
 	if (!api.workouts || !api.workouts?.getAllWeekRoutines) {

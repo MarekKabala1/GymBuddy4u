@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { Workout } from '../app/types/types';
+import { Workout } from '../../../../types/types';
 
 interface WorkoutFormProps {
 	onSubmit: SubmitHandler<Workout>;

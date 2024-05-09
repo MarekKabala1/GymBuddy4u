@@ -1,7 +1,8 @@
 'use server';
-import { api } from '@/convex/_generated/api';
-import { Dashboard } from '@/components/UserDashboard';
 import { preloadQuery } from 'convex/nextjs';
+import { api } from '@/convex/_generated/api';
+
+import { Dashboard } from './UserDashboard';
 
 export default async function UserPage() {
 	if (!api.measurements || !api.measurements.getLastMeasurementForUser) {

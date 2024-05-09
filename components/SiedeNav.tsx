@@ -61,7 +61,7 @@ export default function SideNav(): React.ReactElement {
 				</button>
 				<Link href={'/userPage'} className='flex gap-1 items-center  md:hidden'>
 					<p className='font-calligraphic text-sm tracking-wider'>GymBuddy4U</p>
-					<Image src='/img-svg/svg/logoLight.svg' alt='GymBuddy4U logo' width={'50'} height={'50'} />
+					<Image src='/img-svg/svg/logoLight.svg' priority={false} loading='lazy' alt='GymBuddy4U logo' width={'50'} height={'50'} />
 				</Link>
 				<div className='flex  items-center gap-4 md:pl-4  '>
 					<UserButton afterSignOutUrl='/' />

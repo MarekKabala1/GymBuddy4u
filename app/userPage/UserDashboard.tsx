@@ -8,11 +8,11 @@ import { api } from '@/convex/_generated/api';
 
 import { ScaleLoader } from 'react-spinners';
 
-import MeasurementsCard from './MeasurementCard';
+import MeasurementsCard from '../../components/MeasurementCard';
 
-import { UserMeasurements } from '../app/types/types';
-import { PlusIcon } from '../app/assets/svgIcons';
-import BMIPanel from './BmiBarIndicator';
+import { UserMeasurements } from '../types/types';
+import { PlusIcon } from '../assets/svgIcons';
+import BMIPanel from '../../components/BmiBarIndicator';
 import useLoading from '@/app/hooks/useLoading';
 
 export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.measurements.getLastMeasurementForUser> }) {

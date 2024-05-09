@@ -1,6 +1,7 @@
-import { UserMeasurements } from '@/components/UserMeasurement';
 import { api } from '@/convex/_generated/api';
 import { preloadQuery } from 'convex/nextjs';
+
+import { UserMeasurements } from './UserMeasurement';
 
 export default async function Measurements() {
 	if (!api.measurements || !api.measurements.getAllMesurmentsForUser) {

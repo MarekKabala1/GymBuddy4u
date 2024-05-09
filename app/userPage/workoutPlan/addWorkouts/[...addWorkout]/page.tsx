@@ -1,8 +1,10 @@
-import AddUserWorkout from '@/components/AddWorkout';
+import { headers } from 'next/headers';
+
 import { api } from '@/convex/_generated/api';
 import { auth } from '@clerk/nextjs/server';
 import { preloadQuery } from 'convex/nextjs';
-import { headers } from 'next/headers';
+
+import AddUserWorkout from './AddUserWorkout';
 
 export default async function AddWorkout() {
 	const headerList = headers();

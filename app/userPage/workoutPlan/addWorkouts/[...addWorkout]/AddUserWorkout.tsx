@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Preloaded, useMutation, usePreloadedQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
-import AddWorkoutForm from '@/components/AddWorkoutForm';
+import AddWorkoutForm from './AddWorkoutForm';
 
 import { useSession } from '@clerk/nextjs';
 
@@ -110,14 +110,14 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 								<p className='w-1/3 text-xs sm:text-base'>{workout.name}</p>
 								<h3 className='w-1/6 text-xs sm:text-base'>{workout.muscleGroup}</h3>
 								<p className='w-1/7 text-xs sm:text-base'>Sets:&nbsp;{workout.sets}</p>
-								<p>
+								<div>
 									{workout.repsValue.map((reps, index) => (
 										<div className='flex gap-2 w-1/4 text-xs sm:text-base' key={index}>
 											<p>Rep&nbsp;{index + 1}:</p>
 											<p>{reps}</p>
 										</div>
 									))}
-								</p>
+								</div>
 								<button onClick={() => handleWorkoutDelete(_id as Id<'workouts'>)} disabled={loading}>
 									<TrashIcon className='w-5 h-5 inline-block' />
 								</button>

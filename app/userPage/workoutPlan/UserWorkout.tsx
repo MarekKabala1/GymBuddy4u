@@ -6,7 +6,7 @@ import { useMutation, Preloaded, usePreloadedQuery } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { api } from '@/convex/_generated/api';
 
-import WorkoutRoutineForm from '@/components/AddWorkoutRoutineForm';
+import WorkoutRoutineForm from './WorkoutRoutineForm';
 
 import { WorkoutRoutine } from '@/app/types/types';
 import { EditIcon, PlusIcon, SubMenuIcon, TrashIcon } from '@/app/assets/svgIcons';
@@ -16,7 +16,7 @@ import useLoading from '@/app/hooks/useLoading';
 
 import { Toaster } from 'react-hot-toast';
 import { ScaleLoader } from 'react-spinners';
-import DeleteConfirm from './DeleteConfirm';
+import DeleteConfirm from '../../../components/DeleteConfirm';
 
 export default function UserWorkout(props: { getWorkoutRoutine: Preloaded<typeof api.workouts.getAllWeekRoutines> }) {
 	const [loading, setLoading] = useLoading();
@@ -205,12 +205,12 @@ export default function UserWorkout(props: { getWorkoutRoutine: Preloaded<typeof
 				<div className='w-full'>
 					<ul className='flex flex-col gap-4 w-full items-start justify-center'>
 						{weekRoutine.map((weekRoutine) => (
-							<div key={weekRoutine._id} className='flex justify-between items-center w-full'>
+							<li key={weekRoutine._id} className='flex justify-between items-center w-full'>
 								<Link className='hover:text-primary-blue' href={`/userPage/workoutPlan/addWorkouts/${weekRoutine.routineId}`} key={weekRoutine._id}>
 									<div className='flex gap-2 items-center h-full'>
-										<p className='flex gap-1 items-center justify-center text-xs w-[35px] aspect-square border border-primary-light p-1 bg-primary-dark rounded-md'>
+										<span className='flex gap-1 items-center justify-center text-xs w-[35px] aspect-square border border-primary-light p-1 bg-primary-dark rounded-md'>
 											{weekRoutine.day.slice(0, 3)}
-										</p>
+										</span>
 										{weekRoutine.name ? weekRoutine.name : weekRoutine.day}
 									</div>
 								</Link>
@@ -242,7 +242,7 @@ export default function UserWorkout(props: { getWorkoutRoutine: Preloaded<typeof
 										</button>
 									</div>
 								</div>
-							</div>
+							</li>
 						))}
 					</ul>
 				</div>

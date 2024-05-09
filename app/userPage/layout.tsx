@@ -1,3 +1,4 @@
+'use server';
 import SideNav from '@/components/SiedeNav';
 
 export default async function UserPageLayout({ children }: { children: React.ReactNode }) {
