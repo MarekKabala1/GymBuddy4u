@@ -54,7 +54,7 @@ export default function SideNav(): React.ReactElement {
 
 	return (
 		<>
-			<header className='flex p-4 items-center justify-between bg-primary-dark/100 md:block'>
+			<header className='flex p-4 items-center justify-between bg-primary-dark/100 sm:h-[80px] md:block'>
 				<button onClick={() => setIsOpen((prev) => !prev)} className='md:hidden'>
 					{isOpen ? <TopCloseIcon /> : <MenuIcon />}
 					<span className='sr-only'>Toggle navigation menu</span>

@@ -74,6 +74,35 @@ export const getWorkoutsForTheDay = query({
       .collect();
   },
 })
+export const addIndexToWorkout = mutation({
+  args: {
+    _id: v.id('workouts'),
+    index: v.number(),
+    userId: v.string()
+  },
+  async handler(ctx, args) {
+    const user = await getUserId(ctx);
+    if (!user) {
+      console.warn("No User found");
+      return;
+    }
+    const currentWorkout = await getWorkoutsForTheDay(ctx, {
+      routineId: args._id,
+      userId: args.userId
+    });
+
+    const getCurrentWorkout = await ctx.db.get(args._id);
+    if (!args._id || !getCurrentWorkout) {
+      console.warn("No Routine found");
+      return;
+    }
+    await ctx.db.patch(getCurrentWorkout._id, {
+      index: args.index
+    });
+    return currentWorkout
+
+  }
+})
 
 
 export const addDayForWeekRoutine = mutation({
@@ -98,6 +127,8 @@ export const addDayForWeekRoutine = mutation({
     })
   }
 })
+
+
 
 export const getAllWeekRoutines = query({
   args: {},
@@ -157,6 +188,7 @@ export const deleteDayRoutine = mutation({
   },
 });
 
+
 export const updateDayRoutine = mutation({
   args: {
     routineId: v.string(),
@@ -176,8 +208,7 @@ export const updateDayRoutine = mutation({
     if (!currentDayRoutine || args.routineId === undefined) {
       throw new Error(`No routine found with that id. Id: ${args.routineId}`);
     }
-
-    console.log(await ctx.db.get(currentDayRoutine._id));
+    await ctx.db.get(currentDayRoutine._id);
     await ctx.db.patch(currentDayRoutine._id, args);
   }
 

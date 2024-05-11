@@ -209,11 +209,7 @@ export function TopCloseIcon({ className, ...props }: IconProps) {
 			strokeWidth='1.5'
 			stroke='currentColor'
 			className={`w-6 h-6 ${className || ''}`}>
-			<path
-				strokeLinecap='round'
-				strokeLinejoin='round'
-				d='M6 18 18 6M6 6l12 12'
-			/>
+			<path strokeLinecap='round' strokeLinejoin='round' d='M6 18 18 6M6 6l12 12' />
 		</svg>
 	);
 }
@@ -237,19 +233,8 @@ export function TrashIcon({ className, ...props }: IconProps) {
 }
 export function PlusIcon({ className, ...props }: IconProps) {
 	return (
-		<svg
-			{...props}
-			className={`${className || ''}`}
-			xmlns='http://www.w3.org/2000/svg'
-			fill='none'
-			viewBox='0 0 24 24'
-			strokeWidth='1.5'
-			stroke='currentColor'>
-			<path
-				strokeLinecap='round'
-				strokeLinejoin='round'
-				d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-			/>
+		<svg {...props} className={`${className || ''}`} xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth='1.5' stroke='currentColor'>
+			<path strokeLinecap='round' strokeLinejoin='round' d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' />
 		</svg>
 	);
 }
@@ -299,11 +284,29 @@ export function BackArrowIcon({ className, ...props }: IconProps) {
 			strokeWidth='1.5'
 			stroke='currentColor'
 			className={` ${className || ''}`}>
-			<path
-				strokeLinecap='round'
-				strokeLinejoin='round'
-				d='m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-			/>
+			<path strokeLinecap='round' strokeLinejoin='round' d='m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' />
+		</svg>
+	);
+}
+export function GrabIcon({ className, ...props }: IconProps) {
+	return (
+		<svg
+			{...props}
+			xmlns='http://www.w3.org/2000/svg'
+			width='24'
+			height='24'
+			viewBox='0 0 24 24'
+			fill='none'
+			stroke='currentColor'
+			strokeWidth='2'
+			strokeLinecap='round'
+			strokeLinejoin='round'
+			className={` ${className || ''}`}>
+			<path d='M18 11.5V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v1.4' />
+			<path d='M14 10V8a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2' />
+			<path d='M10 9.9V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5' />
+			<path d='M6 14v0a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0' />
+			<path d='M18 11v0a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8 2 2 0 1 1 4 0' />
 		</svg>
 	);
 }

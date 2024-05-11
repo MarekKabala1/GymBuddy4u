@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { Workout } from '../../../../types/types';
+import { Workout } from '@/app/types/types';
 
 interface WorkoutFormProps {
 	onSubmit: SubmitHandler<Workout>;
 	onCloseDialog: () => void;
+	routineName: string;
 }
 //TODO: add error handling to the form
 //TODO: add loading state to the form
 //TODO: add validation to the form
-const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) => {
+const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog, routineName }) => {
 	const {
 		register,
 		handleSubmit,
@@ -73,6 +74,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) =>
 	return (
 		<>
 			<form className='flex flex-col gap-4 items-end justify-center' onSubmit={handleSubmit(onSubmitHandler)}>
+				<h3 className='text-md text-primary-light w-full text-center font-bold'>{routineName}</h3>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='muscleGroup'>Muscle Group:</label>
 					<input
@@ -137,10 +139,6 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog }) =>
 					</button>
 				</div>
 			</form>
-			<p className='text-xs text-primary-danger text-center w-full'>
-				When you change the number of sets,
-				<br /> the number of reps will be reset
-			</p>
 		</>
 	);
 };

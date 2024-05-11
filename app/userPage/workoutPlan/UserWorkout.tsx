@@ -206,7 +206,10 @@ export default function UserWorkout(props: { getWorkoutRoutine: Preloaded<typeof
 					<ul className='flex flex-col gap-4 w-full items-start justify-center'>
 						{weekRoutine.map((weekRoutine) => (
 							<li key={weekRoutine._id} className='flex justify-between items-center w-full'>
-								<Link className='hover:text-primary-blue' href={`/userPage/workoutPlan/addWorkouts/${weekRoutine.routineId}`} key={weekRoutine._id}>
+								<Link
+									className='hover:text-primary-blue'
+									href={{ pathname: `/userPage/workoutPlan/addWorkouts/${weekRoutine.routineId}`, query: { name: `${weekRoutine.name}` } }}
+									key={weekRoutine._id}>
 									<div className='flex gap-2 items-center h-full'>
 										<span className='flex gap-1 items-center justify-center text-xs w-[35px] aspect-square border border-primary-light p-1 bg-primary-dark rounded-md'>
 											{weekRoutine.day.slice(0, 3)}

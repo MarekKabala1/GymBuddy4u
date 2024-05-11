@@ -9,6 +9,7 @@ import AddUserWorkout from './AddUserWorkout';
 export default async function AddWorkout() {
 	const headerList = headers();
 	const pathname = headerList.get('x-current-path');
+
 	const routineId = pathname?.split('/')[4] as string;
 	const { userId }: { userId: string | null } = auth();
 
@@ -18,7 +19,7 @@ export default async function AddWorkout() {
 	});
 
 	return (
-		<article className='flex flex-col  w-full p-4 gap-4  overflow-auto'>
+		<article className='flex flex-1 flex-col w-full p-4 gap-4  overflow-auto h-screen '>
 			<AddUserWorkout getUserWorkoutForTheDay={getUserWorkoutForTheDay} />
 		</article>
 	);

@@ -33,7 +33,7 @@ export interface Workout {
   routineId: string;
   userId: string;
   sets: number
-
+  index?: number
 }
 
 export interface WorkoutRoutine {

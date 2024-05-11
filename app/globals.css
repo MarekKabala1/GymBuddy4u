@@ -5,9 +5,9 @@
 html,
 body,
 :root {
-  height: 100%;
-
-
+  height: auto;
+  min-height: 100%;
+  overflow: auto;
 }
 body{
   overflow-y: auto;
@@ -17,7 +17,7 @@ body{
   --secondary-rgba: 182, 182, 187;
   --text-blue-rgb: 54, 215, 183;
   --danger-rgb: 255, 0, 0 ;
-  --success-rgb : 0, 255, 0;
+  --success-rgb : 79, 191, 38;
   --background-end-rgb: 155, 255, 255;
 
 }
@@ -30,22 +30,23 @@ body{
   }
 }
 button{
-  @apply hover:text-primary-blue
+  @apply hover:text-primary-success ;
+  transition: all .2s ease-in-out;
 }
 .btn-dark {
-  @apply border-2 border-solid rounded-lg border-primary-light  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer;
+  @apply border-2 border-solid rounded-lg border-primary-light  px-2 py-1 text-xs font-bold text-primary-light bg-primary-dark sm:px-4 sm:text-sm cursor-pointer hover:drop-shadow-2xl hover:border-primary-dark;
 }
 .btn-light {
-  @apply border-2 border-solid  rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm cursor-pointer;
+  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-dark bg-primary-light sm:px-4 sm:text-sm cursor-pointer hover:drop-shadow-2xl hover:border-primary-light  ;
 }
 .btn-danger {
-  @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-danger sm:px-4 sm:text-sm cursor-pointer;
+  @apply border-2 border-solid  rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-danger sm:px-4 sm:text-sm cursor-pointer hover:drop-shadow-2xl hover:border-primary-danger;
 }
 .btn-success {
   @apply border-2 border-solid rounded-lg  px-2 py-1 text-xs font-bold text-primary-light bg-primary-success sm:px-4 sm:text-sm cursor-pointer;
 }
 .btn-underline{
-  @apply  border-b text-xs cursor-pointer
+  @apply  border-b text-xs cursor-pointer hover:border-primary-success
 }
 .icon {
   @apply w-8 h-8;
@@ -60,16 +61,10 @@ dialog[open]{
   @apply opacity-100 p-8 bg-primary-dark bg-opacity-60 flex flex-col items-end gap-4  rounded-md
 }
 dialog{
-  @apply opacity-0
+  @apply opacity-0  shadow-md  shadow-primary-blue border border-primary-blue
 }
 ::backdrop{
   @apply bg-black opacity-80
-}
-td{
-  @apply p-4 rounded-md border border-primary-dark bg-primary-dark
-}
-tbody{
-  @apply mb-8 border-separate
 }
 .progressBar::before{
     content: "";

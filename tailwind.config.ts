@@ -18,6 +18,9 @@ const config: Config = {
           success: 'rgba(var(--success-rgb),<alpha-value>)',
         }
       },
+      boxShadow: {
+        'primary-success': ' 0 1px 3px 0  rgba(var(--success-rgba),<alpha-value>)',
+      },
       gridTemplateColumns: {
         '1fr,2fr': '1fr 2fr'
       },

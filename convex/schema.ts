@@ -32,6 +32,7 @@ export default defineSchema({
   workouts: defineTable({
     name: v.string(),
     userId: v.string(),
+    index: v.optional(v.number()),
     routineId: v.string(),
     muscleGroup: v.string(),
     sets: v.number(),

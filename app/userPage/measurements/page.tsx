@@ -10,6 +10,7 @@ export default async function Measurements() {
 	}
 	const userMeasurements = await preloadQuery(api.measurements?.getAllMesurmentsForUser);
 	if (!userMeasurements) return null;
+
 	return (
 		<article className='flex flex-col items-center w-full p-4 gap-8  overflow-auto '>
 			<UserMeasurements userMeasurements={userMeasurements} />
