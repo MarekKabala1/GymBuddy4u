@@ -43,10 +43,29 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 	const fetchWorkout = usePreloadedQuery(props.getUserWorkoutForTheDay);
 	const createWorkout = useMutation(api.workouts?.addWorkoutForDayRoutine);
 	const deleteWorkout = useMutation(api.workouts.deleteWorkout);
+	const updateWorkoutIndex = useMutation(api.workouts.updateWorkoutIndex);
+
+	//sort workout data by index
+
+	const sortWorkoutsByIndex = (workouts: Workout[]) => {
+		return [...workouts].sort((a, b) => {
+			if (a.index && b.index) {
+				return a.index - b.index;
+			}
+			if (a.index) {
+				return -1;
+			}
+			if (b.index) {
+				return 1;
+			}
+			return 0;
+		});
+	};
 
 	useEffect(() => {
 		if (fetchWorkout && fetchWorkout.length > 0) {
-			setDayWorkout(fetchWorkout);
+			const sortedWorkouts = sortWorkoutsByIndex(fetchWorkout);
+			setDayWorkout(sortedWorkouts);
 			setLoading({ type: 'SET_LOADING', payload: false });
 		} else {
 			setLoading({ type: 'SET_LOADING', payload: false });
@@ -56,10 +75,19 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 
 	const handleFormSubmit = async (data: Workout) => {
 		try {
+			const index = dayWorkout.length + 1;
+			const isIndexAvailable = (index: number) => {
+				return !dayWorkout.some((workout) => workout.index === index);
+			};
+
+			if (!isIndexAvailable(index)) {
+				setLoading({ type: 'SET_LOADING', payload: false });
+				console.error('Index is already assigned to another workout');
+				showErrorToast('Failed to create workout Routine');
+				return;
+			}
 			setLoading({ type: 'SET_LOADING', payload: true });
-			//TOdO: Check in the form why sets are a string
-			const dataWithIds = { ...data, userId: userId, routineId: routineId, sets: Number(data.sets) };
-			console.log(dataWithIds);
+			const dataWithIds = { ...data, userId: userId, routineId: routineId, sets: Number(data.sets), index: index };
 			await createWorkout(dataWithIds);
 
 			dialog.current?.close();
@@ -102,14 +130,16 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 			const overIndex = prev.findIndex((item) => item._id === over?.id);
 			const newItems = arrayMove(prev, activeIndex, overIndex);
 			const updatedWorkout = newItems.map((item, index) => {
-				console.log('first', { ...item, index: index + 1 });
-				return { ...item, index: index + 1 };
+				const dataWithNewIndex = { _id: item._id as Id<'workouts'>, userId: item.userId as string, index: (index + 1) as number };
+				updateWorkoutIndex(dataWithNewIndex);
+				console.log('dataWithNewIndex', dataWithNewIndex);
+
+				return { ...item, index: item.index };
 			});
 			setDayWorkout(updatedWorkout);
 
 			return updatedWorkout;
 		};
-		console.log(dayWorkout);
 		dayWorkoutWitIndex(dayWorkout);
 	};
 
@@ -166,7 +196,7 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 												routineId: routineId,
 												userId: userId,
 											}}
-											handleWorkoutDelete={handleWorkoutDelete}
+											handleDelete={() => handleWorkoutDelete(_id)}
 											loading={loading}
 											routineId={''}
 											userId={''}

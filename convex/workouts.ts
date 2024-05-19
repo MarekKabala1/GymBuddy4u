@@ -40,6 +40,7 @@ export const addWorkoutForDayRoutine = mutation({
     muscleGroup: v.string(),
     sets: v.number(),
     repsValue: v.array(v.number()),
+    index: v.optional(v.number())
   },
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);
@@ -52,7 +53,8 @@ export const addWorkoutForDayRoutine = mutation({
       routineId: args.routineId,
       muscleGroup: args.muscleGroup,
       sets: args.sets,
-      repsValue: args.repsValue
+      repsValue: args.repsValue,
+      index: args.index
     })
   }
 })
@@ -70,11 +72,10 @@ export const getWorkoutsForTheDay = query({
     return await ctx.db
       .query("workouts")
       .filter((q) => q.eq(q.field("routineId"), args.routineId))
-      .order("desc")
       .collect();
   },
 })
-export const addIndexToWorkout = mutation({
+export const updateWorkoutIndex = mutation({
   args: {
     _id: v.id('workouts'),
     index: v.number(),

@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Irish_Grover } from 'next/font/google';
 import { Providers } from './ConvexClientProvider';
+import { StrictMode } from 'react';
 
 // const inter = Inter({ subsets: ['latin'] });
 const IrishGrove = Irish_Grover({
@@ -24,9 +25,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en'>
-			<body className={`${IrishGrove.variable} font-sans m-auto  bg-primary-dark text-primary-light overflow-auto `}>
-				<Providers>{children}</Providers>
-			</body>
+			<StrictMode>
+				<body className={`${IrishGrove.variable} font-sans m-auto  bg-primary-dark text-primary-light overflow-auto `}>
+					<Providers>{children}</Providers>
+				</body>
+			</StrictMode>
 		</html>
 	);
 }

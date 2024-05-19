@@ -11,7 +11,7 @@ export default async function Workout() {
 
 	const getWorkoutRoutine = await preloadQuery(api.workouts?.getAllWeekRoutines, {});
 	return (
-		<article className='flex flex-col items-center w-full h-full p-4 gap-4'>
+		<article className='flex flex-col items-center w-full p-4 gap-4 overflow-auto h-screen'>
 			<UserWorkout getWorkoutRoutine={getWorkoutRoutine} />
 		</article>
 	);
