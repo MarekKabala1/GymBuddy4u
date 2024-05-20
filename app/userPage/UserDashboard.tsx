@@ -147,22 +147,25 @@ export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.meas
 				<p
 					className={`${
 						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
-							? 'font-bold text-lg text-primary-success '
-							: 'font-bold text-lg text-primary-danger'
+							? 'font-bold text-lg text-primary-danger '
+							: 'font-bold text-lg text-primary-success'
 					}`}>
 					{bmiValue}
 				</p>
 				<span
 					className={`${
 						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
-							? ' text-lg text-primary-success '
-							: ' text-lg text-primary-danger'
+							? ' text-lg text-primary-danger '
+							: ' text-lg text-primary-success'
 					}`}>
 					{bmiName}
 				</span>
 			</div>
 
-			<Link role='button' href='/userPage/measurements' className='btn-light text-primary-blue m-auto flex gap-1 items-center hover:text-primary-blue'>
+			<Link
+				role='button'
+				href='/userPage/measurements'
+				className='btn-light text-primary-blue m-auto flex gap-1 items-center hover:drop-shadow-2xl hover:border-primary-light hover:text-primary-success transition: all .2s ease-in-out'>
 				<PlusIcon /> Measurement
 			</Link>
 		</>

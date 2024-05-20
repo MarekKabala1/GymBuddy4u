@@ -41,7 +41,7 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 
 	const dialog = useRef<HTMLDialogElement>(null);
 	const fetchWorkout = usePreloadedQuery(props.getUserWorkoutForTheDay);
-	const createWorkout = useMutation(api.workouts?.addWorkoutForDayRoutine);
+	const createWorkout = useMutation(api.workouts?.createWorkoutForRoutine);
 	const deleteWorkout = useMutation(api.workouts.deleteWorkout);
 	const updateWorkoutIndex = useMutation(api.workouts.updateWorkoutIndex);
 
@@ -132,7 +132,6 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 			const updatedWorkout = newItems.map((item, index) => {
 				const dataWithNewIndex = { _id: item._id as Id<'workouts'>, userId: item.userId as string, index: (index + 1) as number };
 				updateWorkoutIndex(dataWithNewIndex);
-				console.log('dataWithNewIndex', dataWithNewIndex);
 
 				return { ...item, index: item.index };
 			});

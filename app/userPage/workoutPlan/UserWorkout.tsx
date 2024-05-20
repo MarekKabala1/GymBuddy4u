@@ -34,7 +34,7 @@ export default function UserWorkout(props: { getWorkoutRoutine: Preloaded<typeof
 
 	const WeekRoutine = usePreloadedQuery(props.getWorkoutRoutine);
 
-	const createWeekRoutine = useMutation(api.workouts?.addDayForWeekRoutine);
+	const createWeekRoutine = useMutation(api.workouts?.createDayForWeekRoutine);
 
 	const deleteRoutine = useMutation(api.workouts?.deleteDayRoutine);
 
@@ -207,7 +207,7 @@ export default function UserWorkout(props: { getWorkoutRoutine: Preloaded<typeof
 						{weekRoutine.map((weekRoutine) => (
 							<li key={weekRoutine._id} className='flex justify-between items-center w-full'>
 								<Link
-									className='hover:text-primary-blue'
+									className='hover:border-primary-light hover:text-primary-success transition: all .2s ease-in-out'
 									href={{ pathname: `/userPage/workoutPlan/addWorkouts/${weekRoutine.routineId}`, query: { name: `${weekRoutine.name}` } }}
 									key={weekRoutine._id}>
 									<div className='flex gap-2 items-center h-full'>

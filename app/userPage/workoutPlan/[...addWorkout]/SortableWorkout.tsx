@@ -15,11 +15,14 @@ interface SortableWorkoutProps {
 }
 
 export default function SortableWorkout({ _id, workout, loading, handleDelete }: SortableWorkoutProps) {
-	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: _id });
+	const { attributes, listeners, setNodeRef, isDragging, transform, transition } = useSortable({ id: _id });
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
+		opacity: isDragging ? 0.8 : 1,
+		zIndex: isDragging ? 9999 : 'auto',
+		color: isDragging ? 'green' : 'inherit',
 	};
 
 	if (_id === undefined) {

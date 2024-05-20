@@ -32,7 +32,7 @@ export const getDayRoutine = query({
   },
 });
 
-export const addWorkoutForDayRoutine = mutation({
+export const createWorkoutForRoutine = mutation({
   args: {
     name: v.string(),
     userId: v.string(),
@@ -106,7 +106,7 @@ export const updateWorkoutIndex = mutation({
 })
 
 
-export const addDayForWeekRoutine = mutation({
+export const createDayForWeekRoutine = mutation({
   args: {
     routineId: v.string(),
     userId: v.string(),
@@ -168,21 +168,25 @@ export const deleteWorkout = mutation({
 });
 
 export const deleteDayRoutine = mutation({
-  args: { id: v.id('workoutsWeekRoutine') },
+  args: {
+    id: v.id('workoutsWeekRoutine'),
+
+  },
   async handler(ctx, args) {
     const user = await getUserId(ctx);
     if (!user) {
       console.warn("No User found");
       return;
     }
-
     const dayRoutine = await ctx.db.get(args.id);
+
 
     if (!dayRoutine) {
       console.warn("can't find user, does not exist");
       return "User routine not found";
     } else {
       await ctx.db.delete(dayRoutine._id);
+
       return "User routine deleted";
 
     }
