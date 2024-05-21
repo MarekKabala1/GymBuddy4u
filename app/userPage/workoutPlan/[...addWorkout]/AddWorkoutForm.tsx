@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Workout } from '@/app/types/types';
-import { addWorkout } from '../actions/actions';
 
 interface WorkoutFormProps {
 	onSubmit: SubmitHandler<Workout>;
@@ -59,7 +58,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onSubmit, onCloseDialog, rout
 
 	return (
 		<>
-			<form className='flex flex-col gap-4 items-end justify-center' ref={formRef} action={addWorkout} onSubmit={handleSubmit(onSubmitHandler)}>
+			<form className='flex flex-col gap-4 items-end justify-center' ref={formRef} onSubmit={handleSubmit(onSubmitHandler)}>
 				<h3 className='text-md text-primary-light w-full text-center font-bold'>{routineName}</h3>
 				<div className='flex items-center justify-between w-full'>
 					<label htmlFor='muscleGroup'>Muscle Group:</label>
