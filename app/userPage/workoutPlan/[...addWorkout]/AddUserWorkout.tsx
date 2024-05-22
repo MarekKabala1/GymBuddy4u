@@ -158,15 +158,15 @@ export default function AddUserWorkout(props: { getUserWorkoutForTheDay: Preload
 					<AddWorkoutForm onSubmit={handleFormSubmit} onCloseDialog={() => dialog.current?.close()} routineName={routineName as string} />
 				</dialog>
 
-				<h3 className='text-lg font-bold'>{routineName}</h3>
-				<div className='flex flex-col items-center w-full h-full overflow-auto gap-2 '>
+				<h3 className='text-lg font-bold text-primary-blue'>{routineName}</h3>
+				<div className='flex flex-col items-center w-full h-full overflow-auto gap-2 md:max-w-[750px]'>
 					<div className={dayWorkout?.length === 0 ? 'hidden' : 'flex items-start w-full px-4 justify-between text-xs'}>
 						{/* //ToDo:Change the styling to remove two empty p tags */}
 						<p className='w-5 h-5'></p>
-						<p className=' w-1/3'>Name</p>
-						<p className='w-1/6'>Group</p>
-						<p className='w-1/6 max-w-[45.5px]'>Sets</p>
-						<p className='w-1/7 min-w-[55px]'>Reps</p>
+						<p className=' w-1/3 text-primary-blue'>Name</p>
+						<p className='w-1/6 text-primary-blue'>Group</p>
+						<p className='w-1/6 max-w-[45.5px] text-primary-blue'>Sets</p>
+						<p className='w-1/7 min-w-[55px] text-primary-blue'>Reps</p>
 						<p className='w-5 h-5'></p>
 					</div>
 					<DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd} sensors={sensors}>

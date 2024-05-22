@@ -95,49 +95,48 @@ export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.meas
 
 	return (
 		<>
-			<div className='grid  grid-cols-3 grid-rows-4 place-items-center'>
+			<div className='grid grid-rows-4 grid-col-[1fr,2fr,1fr] place-items-center p-4'>
 				<div className='col-start-1 row-start-1 flex flex-col justify-center items-center'>
-					<p className='font-bold text-primary-blue '>Age</p>
-					<p className='font-bold text-lg'>{userMeasurements?.age}</p>
+					<p className='font-bold text-primary-blue pb-1 '>Age</p>
+					<p className='font-bold text-sm md:text-lg'>{userMeasurements?.age}</p>
 					<span>Years</span>
 				</div>
 				<div className='col-start-3 row-start-1 flex  flex-col justify-center items-center'>
-					<p className='font-bold text-primary-blue'>Height</p>
-					<p className='font-bold text-lg'>{userMeasurements?.height}</p>
+					<p className='font-bold text-primary-blue pb-1'>Height</p>
+					<p className='font-bold text-sm md:text-lg'>{userMeasurements?.height}</p>
 					<span>{userMeasurements?.unit === 'metric' ? 'cm' : 'inch'}</span>
 				</div>
 				<div className='col-start-2 row-start-1 flex  flex-col justify-center items-center'>
-					<p className='font-bold text-primary-blue'>Weight</p>
-					<p className='font-bold text-lg'>{userMeasurements?.weight}</p>
+					<p className='font-bold text-primary-blue pb-1'>Weight</p>
+					<p className='font-bold text-sm md:text-lg'>{userMeasurements?.weight}</p>
 					<span>{userMeasurements?.unit === 'metric' ? 'kg' : 'lbs'}</span>
 				</div>
 
-				<div className='col-start-1 row-start-2 w-max h-max flex flex-col items-center '>
+				<div className='col-start-1 row-start-2  '>
 					<MeasurementsCard title='Biceps' userMeasurements={userMeasurements?.biceps} unit={measurementsUnit} />
 				</div>
-				<div className='col-start-3 row-start-2 w-max h-max flex flex-col items-center '>
+				<div className='col-start-3 row-start-2 '>
 					<MeasurementsCard title='Chest' userMeasurements={userMeasurements?.chest} unit={measurementsUnit} />
 				</div>
-				<div className='col-start-3 row-start-4 w-max h-max flex flex-col items-center '>
+				<div className='col-start-3 row-start-4 '>
 					<MeasurementsCard title='Calves' userMeasurements={userMeasurements?.calves} unit={measurementsUnit} />
 				</div>
-				<div className='col-start-3 row-start-3 w-max h-max flex flex-col items-center '>
+				<div className='col-start-3 row-start-3 '>
 					<MeasurementsCard title='Thigh' userMeasurements={userMeasurements?.thigh} unit={measurementsUnit} />
 				</div>
-				<div className='col-start-1 row-start-4 w-max h-max flex flex-col items-center '>
+				<div className='col-start-1 row-start-4 '>
 					<MeasurementsCard title='Hips' userMeasurements={userMeasurements?.hips} unit={measurementsUnit} />
 				</div>
-				<div className='col-start-1 row-start-3 w-max h-max flex flex-col items-center '>
+				<div className='col-start-1 row-start-3 '>
 					<MeasurementsCard title='Belly' userMeasurements={userMeasurements?.belly} unit={measurementsUnit} />
 				</div>
 
 				<Image
 					src='/img-svg/img/FULL1.png'
-					alt='Posture of the man with highlighted muscels'
+					alt='Posture of the man with highlighted muscles'
 					width={'200'}
 					height={'300'}
 					priority={true}
-					style={{ height: 'auto', width: '300' }}
 					className=' row-start-2 row-span-4 col-start-2'
 				/>
 			</div>
@@ -147,16 +146,16 @@ export function Dashboard(props: { getLastMeasurement: Preloaded<typeof api.meas
 				<p
 					className={`${
 						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
-							? 'font-bold text-lg text-primary-danger '
-							: 'font-bold text-lg text-primary-success'
+							? 'font-bold text-sm md:text-lg text-primary-danger '
+							: 'font-bold text-sm md:text-lg text-primary-success'
 					}`}>
 					{bmiValue}
 				</p>
 				<span
 					className={`${
 						bmiName === 'Underweight' || bmiName === 'Overweight' || bmiName === 'To much Mate'
-							? ' text-lg text-primary-danger '
-							: ' text-lg text-primary-success'
+							? ' text-sm md:text-lg text-primary-danger '
+							: ' text-sm md:text-lg text-primary-success'
 					}`}>
 					{bmiName}
 				</span>
