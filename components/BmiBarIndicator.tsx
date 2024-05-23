@@ -52,9 +52,11 @@ const BMIPanel: React.FC<{ bmi: number | undefined }> = ({ bmi }) => {
 						mask: 'radial-gradient(at 50% 100%, white 53%, transparent 52.5%)',
 						// maskMode: 'alpha',
 						WebkitMask: 'radial-gradient(at 50% 100%, #0000 53%, #000 52.5%)',
-						background: `conic-gradient(from 0.75turn at 50% 100%, ${barColor} calc(var(--percentage) * 1% / 2), transparent calc( var(--percentage) * 1% / 2 + 0.1%))`,
+						background: `conic-gradient(from 0.75turn at 50% 100%, ${barColor} calc(0 * 1% / 2), transparent calc(${parseFloat(
+							getProgressBarPercentage(bmi as number)
+						)} * 1% / 2 + 0.1%))`,
 					}}>
-					<style>
+					{/* <style>
 						{`
                 @property --percentage {
 									syntax: '<number>';
@@ -64,10 +66,10 @@ const BMIPanel: React.FC<{ bmi: number | undefined }> = ({ bmi }) => {
 
                 @keyframes progress {
 									0% { --percentage:0 }
-									100% { --percentage:${parseFloat(getProgressBarPercentage(bmi as number))}
+									100% { --percentage: ${parseFloat(getProgressBarPercentage(bmi as number))}
 								}
             `}
-					</style>
+					</style> */}
 				</div>
 			</div>
 		</div>
